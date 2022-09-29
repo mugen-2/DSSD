@@ -11,11 +11,11 @@ from app.resources import auth
 from app.resources import puntosDeEncuentro
 from app.resources import denuncia
 from app.resources import recorrido
-from app.resources.api.zonaI import zonaI_api
-from app.resources.api.denuncia import denuncia_api
-from app.resources.api.recorrido import recorridoE_api
-from app.resources.api.punto import puntosE_api
-from app.resources.api.categorias import categorias_api
+#from app.resources.api.zonaI import zonaI_api
+#from app.resources.api.denuncia import denuncia_api
+#from app.resources.api.recorrido import recorridoE_api
+#from app.resources.api.punto import puntosE_api
+#from app.resources.api.categorias import categorias_api
 from app.helpers import handler
 from app.helpers import auth as helper_auth
 from oauthlib.oauth2 import WebApplicationClient
