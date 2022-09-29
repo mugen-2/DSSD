@@ -6,7 +6,7 @@ from config import config
 from app import db
 from app.models.user import User
 from app.resources import user
-from app.resources import auth
+#from app.resources import auth
 from app.helpers import handler
 from app.helpers import auth as helper_auth
 from oauthlib.oauth2 import WebApplicationClient

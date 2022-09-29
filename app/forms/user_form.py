@@ -5,7 +5,6 @@ from wtforms import StringField, PasswordField, SubmitField, SelectMultipleField
 from wtforms.validators import DataRequired, EqualTo, Length, ValidationError, Email
 from wtforms.fields.html5 import EmailField, IntegerField
 from app.models.user import User
-from app.models.rol import Rol
 
 from sqlalchemy import and_, Column
 from werkzeug.security import generate_password_hash, check_password_hash
