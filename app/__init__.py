@@ -5,7 +5,7 @@ from flask_login import LoginManager
 from config import config
 from app import db
 from app.models.user import User
-from app.resources import user
+from app.resources import user, collection
 #from app.resources import auth
 from app.helpers import handler
 from app.helpers import auth as helper_auth
@@ -62,6 +62,14 @@ def create_app(environment="development"):
     #app.add_url_rule(
     #    "/login/callback", "auth_callback", auth.callback, methods=["GET"]
     # )
+
+    # Rutas Usuarios
+
+    # Rutas Collecion
+
+    app.add_url_rule("/colecciones", "collection_index", collection.index)
+    app.add_url_rule("/colecciones", "collection_create", collection.create, methods=["POST"])
+    app.add_url_rule("/colecciones/nuevo", "collection_new", collection.new)
 
     # Ruta para el Home (usando decorator)
     @app.route("/")

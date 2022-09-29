@@ -1,0 +1,41 @@
+{% extends "layout.html" %}
+{% block title %}Colecciones{% endblock %}
+{% block head %}
+  {{ super() }}
+{% endblock %}
+{% block content %}
+  <h1>Crear una colección </h1>
+  <form class="form-control" action="{{ url_for('collection_create') }}" method="POST" novalidate>
+    {{form.hidden_tag()}}
+    {{form.nombre.label}}
+    {{form.nombre}}
+    {% for error in form.nombre.errors %}
+      <span style="color:red;" >{{error}}</span>
+    {% endfor %}
+    <br>
+    {{form.tipo.label}}
+    {{form.tipo}}
+    {% for error in form.tipo.errors %}
+    <span style="color:red;" >{{error}}</span>
+    {% endfor %}
+    <br>
+    {{form.plazoF.label}}
+    {{form.plazoF}}
+    {% for error in form.plazoF.errors %}
+    <span style="color:red;" >{{error}}</span>
+    {% endfor %}
+    <br>
+    {{form.fechaL.label}}
+    {{form.fechaL}}
+    {% for error in form.fechaL.errors %}
+    <span style="color:red;" >{{error}}</span>
+    {% endfor %}
+    <br>
+
+    <p>
+      <input type="submit" value="Crear">
+      <button type="reset">Limpiar</button>
+    </p>
+  </form>
+  <a href="{{ url_for('collection_index') }}" class="link">Volver</a>
+{% endblock %}

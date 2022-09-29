@@ -1,0 +1,11 @@
+{% extends "layout.html" %}
+{% block title %}Colecciones{% endblock %}
+
+{% block head %}
+  {{ super() }} 
+{% endblock %}
+
+{% block content %}
+  <h1>Colecciones</h1>
+  <a href="{{ url_for('collection_new') }}" class="link">Nueva</a>
+{% endblock %}
