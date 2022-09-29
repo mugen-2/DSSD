@@ -6,6 +6,7 @@ def init_app(app):
     db.init_app(app)
     with app.app_context():
         from app.models.user import User
+        from app.models.collection import Collection
         config_db(app)
 
 def config_db(app):
