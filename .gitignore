@@ -111,3 +111,15 @@ flask_session
 .vim
 coc-settings.json
 .vscode
+
+*.log
+
+*.pot
+
+*.pyc
+
+*/*/*/__pycache__/
+
+*/*/__pycache__/
+
+*/__pycache__/
