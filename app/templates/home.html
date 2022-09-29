@@ -6,20 +6,4 @@
 {% block content %}
   <h1>Inicio</h1>
   <p>Página de inicio de la aplicación</p>
-  {%if current_user.is_authenticated%}
-    {% if current_user.confirmados %}
-      <a href="{{ url_for('user_index') }}" class="link">Usuarios</a>
-      <a href="{{ url_for('puntosDeEncuentro_index') }}" class="link">Puntos de encuentro</a>
-      <a href="{{ url_for('configuracion_newconfig') }}" class="link">Configuracion</a>
-      <a href="{{ url_for('zonas_index') }}" class="link">Zonas Inundables</a>
-      <a href="{{ url_for('denuncia_index') }}" class="link">Denunciar</a>
-      <a href="{{ url_for('recorrido_index') }}" class="link">Recorridos de evacuación</a>
-    {% else %}
-      <p>Debe esperar la confimación del administrador para continuar
-      </p>
-    {% endif %}
-  {% else %}
-    <a href="{{ url_for('auth_login') }}" class="link">Iniciar sesión</a>
-  {% endif %}
-
 {% endblock %}

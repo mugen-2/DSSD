@@ -21,14 +21,10 @@ class Config(object):
 class ProductionConfig(Config):
     """Production configuration."""
 
-    DB_HOST = environ.get("DB_HOST", "localhost")
-    DB_USER = environ.get("DB_USER", "grupo16")
-    DB_PASS = environ.get("DB_PASS", "MjlhZDQ0YTk4MGQ5")
-    DB_NAME = environ.get("DB_NAME", "grupo16")
     #GOOGLE_CLIENT_SECRET = environ.get("GOOGLE_CLIENT_SECRET","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")
     #GOOGLE_CLIENT_ID= environ.get("GOOGLE_CLIENT_ID","511645563531-euah8nadpcuu1dch1eee0k8n6ifd3cmo.apps.googleusercontent.com")
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    SQLALCHEMY_DATABASE_URI = (f"mysql+pymysql://{DB_USER}:{DB_PASS}@{DB_HOST}/{DB_NAME}")
+    SQLALCHEMY_DATABASE_URI = (f"postgressql://postgress:admin@localhost/bddssd")
 
 
 
@@ -40,7 +36,7 @@ class DevelopmentConfig(Config):
     DB_PASS = environ.get("DB_PASS", "MY_DB_PASS")
     DB_NAME = environ.get("DB_NAME", "MY_DB_NAME")
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    SQLALCHEMY_DATABASE_URI = (f"mysql+pymysql://{DB_USER}:{DB_PASS}@{DB_HOST}:3306/{DB_NAME}")
+    SQLALCHEMY_DATABASE_URI = (f"postgressql://postgress:admin@localhost/bddssd")
 
 
 class TestingConfig(Config):
