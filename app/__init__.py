@@ -5,7 +5,7 @@ from flask_login import LoginManager
 from config import config
 from app import db
 from app.models.user import User
-from app.resources import user, collection
+from app.resources import user, collection, auth
 #from app.resources import auth
 from app.helpers import handler
 from app.helpers import auth as helper_auth
@@ -31,11 +31,11 @@ def create_app(environment="development"):
     client = WebApplicationClient(GOOGLE_CLIENT_ID)
 
     # Manejador de Sesiones
-    #login_manager = LoginManager()
-   # login_manager.init_app(app)
-    #@login_manager.user_loader
-    #def load_user(user_id):
-     #   return User.query.filter_by(id=user_id).first()
+    login_manager = LoginManager()
+    login_manager.init_app(app)
+    @login_manager.user_loader
+    def load_user(user_id):
+        return User.query.filter_by(id=user_id).first()
 
     # Carga de la configuración
     env = environ.get("FLASK_ENV", environment)
@@ -52,16 +52,11 @@ def create_app(environment="development"):
     app.jinja_env.globals.update(is_authenticated=helper_auth.authenticated)
 
     # Autenticación
-    #app.add_url_rule("/iniciar_sesion", "auth_login", auth.login)
-    #app.add_url_rule("/cerrar_sesion", "auth_logout", auth.logout)
-    #app.add_url_rule(
-    #    "/autenticacion", "auth_authenticate", auth.authenticate, methods=["POST"]
-    #)
-   
-    #app.add_url_rule("/loginG", "iniciar_sesionG", auth.loginG)
-    #app.add_url_rule(
-    #    "/login/callback", "auth_callback", auth.callback, methods=["GET"]
-    # )
+    app.add_url_rule("/iniciar_sesion", "auth_login", auth.login)
+    app.add_url_rule("/cerrar_sesion", "auth_logout", auth.logout)
+    app.add_url_rule(
+        "/autenticacion", "auth_authenticate", auth.authenticate, methods=["POST"]
+    )
 
     # Rutas Usuarios
 

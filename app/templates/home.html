@@ -5,6 +5,10 @@
 {% endblock %}
 {% block content %}
   <h1>Inicio</h1>
-  <p>Página de inicio de la aplicación</p>
-  <a href="{{ url_for('collection_index') }}" class="link"> Colecciones </a>
+  {%if current_user.is_authenticated%}
+    <p>Página de inicio de la aplicación</p>
+    <a href="{{ url_for('collection_index') }}" class="link"> Colecciones </a>
+  {% else %}
+    <a href="{{ url_for('auth_login') }}" class="link">Iniciar sesión</a>
+  {% endif %}
 {% endblock %}
