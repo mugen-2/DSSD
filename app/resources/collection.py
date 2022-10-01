@@ -1,3 +1,5 @@
+from concurrent.futures import process
+from email import header
 from flask import redirect, render_template, request, url_for, session, abort, flash
 #from app.db import connection
 from app.models.user import User
@@ -9,6 +11,8 @@ from app.db import db
 from app.helpers.auth import authorized
 from flask_login import login_required,current_user
 from app.models.collection import Collection
+import requests
+import json
 
 def index():
     page =request.args.get('page',1,type=int)
@@ -29,5 +33,11 @@ def create():
         fechaL = request.form.get("fechaL")
         adicional = request.form.get("adi")
         Collection.crear(nombre, tipo, plazoF, fechaL)
+        cookie = session.get("cookie")
+        headers = {'X-Bonita-API-Token': cookie}
+        response = requests.get("http://localhost:8080/bonita/API/bpm/process/?s=", headers = headers)
+        aux = json.loads(response)
+        processid = aux["id"]
+        requests.post("http://localhost:8080/bonita/API/bpm/process/"+processid+"/instantiation")
         return redirect(url_for("collection_index"))
     return render_template("collection/new.html",form=form) 
