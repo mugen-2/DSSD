@@ -4,8 +4,9 @@ from sqlalchemy.sql.expression import true
 from sqlalchemy.util.langhelpers import NoneType
 #from app.db import connection
 from werkzeug.security import check_password_hash, generate_password_hash
-from flask_login import login_user, logout_user, login_required
+from flask_login import login_user, logout_user, login_required, current_user
 from app.models.user import User
+import requests
 
 import json
 import requests
@@ -20,11 +21,15 @@ def authenticate():
     password = request.form.get('password')
     #recordar = request.form.get('recordar')
     user = User.query.filter_by(email=email).first()
+    
 
     if user and check_password_hash(user.password, password):
         
         flash('Se ha logueado correctamente')    
         login_user(user)
+        identification = {'username':'walter.bates', 'password': 'bpm'}
+        response = requests.post("http://localhost:8080/bonita/loginservice", identification)
+        session["cookie"] = response.cookies.get_dict()["X-Bonita-API-Token"]
         return redirect(url_for("home"))
     else:
         flash('credenciales invalidas, intente nuevamente')
@@ -32,5 +37,7 @@ def authenticate():
 
 @login_required
 def logout():
+    session.pop('coockie', None)
+    response = requests.get("http://localhost:8080/bonita/logoutservice")
     logout_user()
     return redirect(url_for("auth_login"))
