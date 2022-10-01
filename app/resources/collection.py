@@ -23,7 +23,6 @@ def new():
 def create():
     form = Form_collection_new()    
     if (form.validate_on_submit()):
-        print('wtf')
         nombre = request.form.get("nombre")
         tipo = request.form.get("tipo")
         plazoF = request.form.get("plazoF")

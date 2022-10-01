@@ -13,8 +13,14 @@
       <span style="color:red;" >{{error}}</span>
     {% endfor %}
     <br>
-    <label for="tipo">Tipos de anteojos</label>
-    {{form.tipo}}
+    <label for="tipo">Tipo de anteojos</label>
+    <select name="tipo"> 
+   
+    <option value=1>Lentes de lectura </option>
+    <option value=1>Lentes de sol </option>
+  
+    </select>
+  
     {% for error in form.tipo.errors %}
     <span style="color:red;" >{{error}}</span>
     {% endfor %}

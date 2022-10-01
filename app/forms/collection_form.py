@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from flask_wtf.recaptcha import validators
 from sqlalchemy.sql.expression import true
-from wtforms import StringField, PasswordField, SubmitField, SelectMultipleField, HiddenField, DateField
+from wtforms import StringField, PasswordField, SubmitField, SelectMultipleField, HiddenField, DateField, SelectField
 from wtforms.validators import DataRequired, EqualTo, Length, ValidationError, Email
 from wtforms.fields.html5 import EmailField, IntegerField
 from app.models.collection import Collection
@@ -9,8 +9,10 @@ from app.models.collection import Collection
 
 class Form_collection_new(FlaskForm):
 
-    tipo= StringField('tipo', 
-        validators=[DataRequired( message = "el campo es obligatorio")])
+
+    tipo = SelectField('tipo',
+        choices=[('1','Lentes de lectura'), ('2','Lentes de sol')],
+        validators=[DataRequired( message ="el campo es obligatorio")])
 
     nombre= StringField('nombre', 
         validators=[DataRequired( message = "el campo es obligatorio")])

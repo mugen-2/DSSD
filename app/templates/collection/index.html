@@ -14,6 +14,29 @@
   </li> 
   {% endfor %}
   <a href="{{ url_for('collection_new') }}" class="link">Nueva</a>
+  <br>
   
+  
+
+  {% if collections.has_prev %}
+  <a class= "link " href="{{url_for('collection_index',page=collections.prev_num) }}" >Anterior</a>
+  {% endif %}
+  {% for page_num in collections.iter_pages()%}
+  {% if page_num %}
+    {% if collections.page == page_num %}
+
+    <a class= "btn btn-info" href="{{url_for('collection_index',page=page_num) }}">{{page_num}} </a>
+
+    {% else %}
+
+    <a class= "link" href="{{url_for('collection_index',page=page_num) }}">{{page_num}} </a>
+
+    {% endif %} 
+    {% else %} ... {% endif %} 
+  {% endfor %}
+  {% if collections.has_next %}
+  <a class= "link " href="{{url_for('collection_index',page=collections.next_num) }}" >Siguiente</a>
+  {% endif %}
+  <br>
   <a href="{{ url_for('home') }}" class="link">Volver</a>
 {% endblock %}
