@@ -4,6 +4,7 @@ from sqlalchemy.sql.expression import true
 from wtforms import StringField, PasswordField, SubmitField, SelectMultipleField, HiddenField, DateField
 from wtforms.validators import DataRequired, EqualTo, Length, ValidationError, Email
 from wtforms.fields.html5 import EmailField, IntegerField
+from app.models.collection import Collection
 
 
 class Form_collection_new(FlaskForm):
@@ -19,6 +20,7 @@ class Form_collection_new(FlaskForm):
     
     fechaL= DateField('fechaL', 
         validators=[DataRequired( message = "el campo es obligatorio")])
-
-    adicional= StringField('adicional', 
-        validators=[DataRequired( message = "el campo es obligatorio")])
+    
+    def validate_nombre(form, nombre):
+        if ((Collection.query.filter_by(nombre=nombre.data).first()) != None):
+            raise ValidationError("el nombre de coleccion no esta disponible")

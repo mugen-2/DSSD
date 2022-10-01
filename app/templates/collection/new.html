@@ -7,30 +7,34 @@
   <h1>Crear una colección </h1>
   <form class="form-control" action="{{ url_for('collection_create') }}" method="POST" novalidate>
     {{form.hidden_tag()}}
-    {{form.nombre.label}}
+    <label for="nombre">Nombre de la colección</label>
     {{form.nombre}}
     {% for error in form.nombre.errors %}
       <span style="color:red;" >{{error}}</span>
     {% endfor %}
     <br>
-    {{form.tipo.label}}
+    <label for="tipo">Tipos de anteojos</label>
     {{form.tipo}}
     {% for error in form.tipo.errors %}
     <span style="color:red;" >{{error}}</span>
     {% endfor %}
     <br>
-    {{form.plazoF.label}}
+    <label for="plazoF">Plazo de fabricacion en dias</label>
     {{form.plazoF}}
     {% for error in form.plazoF.errors %}
     <span style="color:red;" >{{error}}</span>
     {% endfor %}
     <br>
-    {{form.fechaL.label}}
+    <label for="fechaL">Fecha de lanzamiento estimada</label>
     {{form.fechaL}}
     {% for error in form.fechaL.errors %}
     <span style="color:red;" >{{error}}</span>
     {% endfor %}
     <br>
+
+    <label for="adi">Adjuntar archivo(s)</label>
+
+    <input type="file" id="adi" name="adi">
 
     <p>
       <input type="submit" value="Crear">

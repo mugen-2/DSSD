@@ -7,6 +7,12 @@
 
 {% block content %}
   <h1>Colecciones</h1>
+
+  {% for collection in collections.items %}
+  <li>
+    {{ collection.nombre }}  
+  </li> 
+  {% endfor %}
   <a href="{{ url_for('collection_new') }}" class="link">Nueva</a>
   
   <a href="{{ url_for('home') }}" class="link">Volver</a>

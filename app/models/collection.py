@@ -13,17 +13,15 @@ class Collection(db.Model, UserMixin):
     tipo = Column(String(100))
     plazoF = Column(Integer)
     fechaL = Column(DateTime)
-    adicional = Column(String(300))
     #google=Column(TINYINT)
 
-    def __init__(self, nombre=None, tipo=None, plazoF=None, fechaL=None, adicional=None):
+    def __init__(self, nombre=None, tipo=None, plazoF=None, fechaL=None):
         self.nombre = nombre
         self.tipo = tipo
         self.plazoF = plazoF
         self.fechaL = fechaL
-        self.adicional = adicional
 
-    def crear(nombre, tipo, plazoF, fechaL, adicional):
-        collection= Collection(nombre,tipo,plazoF,fechaL,adicional)
+    def crear(nombre, tipo, plazoF, fechaL):
+        collection= Collection(nombre,tipo,plazoF,fechaL)
         db.session.add(collection)
         db.session.commit()
