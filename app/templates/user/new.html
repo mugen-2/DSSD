@@ -7,37 +7,38 @@
   <h1>Crear un usuario</h1>
   <form class="form-control" action="{{ url_for('user_create') }}" method="POST" novalidate>
     {{form.hidden_tag()}}
-    {{form.nombre.label}}
+    <label for="nombre">Nombre</label>
     {{form.nombre}}
     {% for error in form.nombre.errors %}
       <span style="color:red;" >{{error}}</span>
     {% endfor %}
     <br>
-    {{form.apellido.label}}
+    <label for="apellido">Apellido</label>
     {{form.apellido}}
     {% for error in form.apellido.errors %}
     <span style="color:red;" >{{error}}</span>
     {% endfor %}
     <br>
-    {{form.username.label}}
+    <label for="username">Nombre de usuario</label>
     {{form.username}}
     {% for error in form.username.errors %}
     <span style="color:red;" >{{error}}</span>
     {% endfor %}
     <br>
-    {{form.email.label}}
+    <label for="email">Email</label>
     {{form.email}}
     {% for error in form.email.errors %}
     <span style="color:red;" >{{error}}</span>
     {% endfor %}
     <br>
-    {{form.password.label}}
+    <label for="password">Contraseña</label>
     {{form.password}}
     {% for error in form.password.errors %}
     <span style="color:red;" >{{error}}</span>
     {% endfor %}
     <br>
 
+    <label for="areas">Rol dentro de la empresa</label>
     <select name="areas"> 
     
     <option value="1"> Diseñador </option>
@@ -48,6 +49,22 @@
     {% for error in form.areas.errors %}
     <span style="color:red;" >{{error}}</span>
     {% endfor %}
+
+    <br>
+
+    <label for="usernameB">Nombre de usuario en Bonita</label>
+    {{form.usernameB}}
+    {% for error in form.usernameB.errors %}
+    <span style="color:red;" >{{error}}</span>
+    {% endfor %}
+    <br>
+
+    <label for="passwordB">Contraseña en Bonita</label>
+    {{form.passwordB}}
+    {% for error in form.password.errors %}
+    <span style="color:red;" >{{error}}</span>
+    {% endfor %}
+    <br>
 
     <p>
       <input type="submit" value="Crear">

@@ -32,8 +32,11 @@ def create():
       username = request.form.get("username")
       areas= request.form.get("areas")
       password = generate_password_hash(password)
+      usernameB = request.form.get("usernameB")
+      passwordB = request.form.get("passwordB")
 
-      User.crear(nombre,apellido,email,password,username,areas)
+
+      User.crear(nombre,apellido,email,password,username,areas,usernameB,passwordB)
       return redirect(url_for("user_index"))
 
    return render_template("user/new.html",form=form) 
