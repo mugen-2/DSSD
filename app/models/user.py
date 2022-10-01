@@ -19,16 +19,22 @@ class User(db.Model, UserMixin):
     area = Column(String(300))
     #google=Column(TINYINT)
 
-def __init__(self, first_name=None, last_name=None, email=None, password=None, username=None, area=None, google=None):
-        self.first_name = first_name
-        self.last_name = last_name
-        self.email = email
-        self.password = password
-        self.username = username
-        self.area = area 
-        #self.google=google
+    def __init__(self, first_name=None, last_name=None, email=None, password=None, username=None, area=None, google=None):
+            self.first_name = first_name
+            self.last_name = last_name
+            self.email = email
+            self.password = password
+            self.username = username
+            self.area = area 
+            #self.google=google
         
-  
+    def crear(nombre,apellido,email,password,username,areas):
+        user = User(nombre,apellido,email,password,username,areas)
+        db.session.add(user)
+        db.session.commit()
 
+    def delete(user):
+        db.session.delete(user)
+        db.session.commit()
 
 

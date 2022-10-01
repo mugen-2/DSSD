@@ -1,0 +1,59 @@
+{% extends "layout.html" %}
+{% block title %}Usuarios{% endblock %}
+{% block head %}
+  {{ super() }}
+{% endblock %}
+{% block content %}
+  <h1>Crear un usuario</h1>
+  <form class="form-control" action="{{ url_for('user_create') }}" method="POST" novalidate>
+    {{form.hidden_tag()}}
+    {{form.nombre.label}}
+    {{form.nombre}}
+    {% for error in form.nombre.errors %}
+      <span style="color:red;" >{{error}}</span>
+    {% endfor %}
+    <br>
+    {{form.apellido.label}}
+    {{form.apellido}}
+    {% for error in form.apellido.errors %}
+    <span style="color:red;" >{{error}}</span>
+    {% endfor %}
+    <br>
+    {{form.username.label}}
+    {{form.username}}
+    {% for error in form.username.errors %}
+    <span style="color:red;" >{{error}}</span>
+    {% endfor %}
+    <br>
+    {{form.email.label}}
+    {{form.email}}
+    {% for error in form.email.errors %}
+    <span style="color:red;" >{{error}}</span>
+    {% endfor %}
+    <br>
+    {{form.password.label}}
+    {{form.password}}
+    {% for error in form.password.errors %}
+    <span style="color:red;" >{{error}}</span>
+    {% endfor %}
+    <br>
+
+    <select name="areas"> 
+    
+    <option value="1"> Diseñador </option>
+    <option value="2"> Operador </option>
+    <option value="3"> Comercial </option>
+    
+    </select>  
+    {% for error in form.areas.errors %}
+    <span style="color:red;" >{{error}}</span>
+    {% endfor %}
+
+    <p>
+      <input type="submit" value="Crear">
+      <button type="reset">Limpiar</button>
+    </p>
+  </form>
+  <a href="{{ url_for('user_index') }}" class="link">Volver</a>
+{% endblock %}
+
