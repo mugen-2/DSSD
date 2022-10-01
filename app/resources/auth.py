@@ -27,7 +27,9 @@ def authenticate():
         
         flash('Se ha logueado correctamente')    
         login_user(user)
-        identification = {'username':'walter.bates', 'password': 'bpm'}
+        passwordB = User.getPasswordB(user.id)
+        userB= User.getUserB(user.id)
+        identification = {'username':userB, 'password': passwordB}
         response = requests.post("http://localhost:8080/bonita/loginservice", identification)
         session["cookie"] = response.cookies.get_dict()["X-Bonita-API-Token"]
         return redirect(url_for("home"))
