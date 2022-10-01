@@ -1,3 +1,4 @@
+import email
 from typing import List
 from sqlalchemy import Table, Column, Integer, String, DateTime, ForeignKey, update
 from sqlalchemy.sql import func
@@ -17,19 +18,21 @@ class User(db.Model, UserMixin):
     password = Column(String(300))
     username = Column(String(100), unique=True)
     area = Column(String(300))
-    #google=Column(TINYINT)
+    usernameB = Column(String(100), unique=True)
+    passwordB = Column(String(300))
 
-    def __init__(self, first_name=None, last_name=None, email=None, password=None, username=None, area=None, google=None):
+    def __init__(self, first_name=None, last_name=None, email=None, password=None, username=None, area=None, usernameB=None, passwordB=None):
             self.first_name = first_name
             self.last_name = last_name
             self.email = email
             self.password = password
             self.username = username
             self.area = area 
-            #self.google=google
+            self.usernameB = usernameB
+            self.passwordB = passwordB
         
-    def crear(nombre,apellido,email,password,username,areas):
-        user = User(nombre,apellido,email,password,username,areas)
+    def crear(nombre,apellido,email,password,username,areas,usernameB,passwordB):
+        user = User(nombre,apellido,email,password,username,areas,usernameB,passwordB)
         db.session.add(user)
         db.session.commit()
 
@@ -37,4 +40,9 @@ class User(db.Model, UserMixin):
         db.session.delete(user)
         db.session.commit()
 
-
+""" def setUserB(user_id,usernameB,passwordB):
+        user = User.query.filter_by(id=user_id)
+        user.passwordB = passwordB
+        user.usernameB = usernameB
+        db.session.commit()
+ """

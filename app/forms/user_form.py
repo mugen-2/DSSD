@@ -33,6 +33,13 @@ class Form_usuario_new(FlaskForm):
         choices=[('1','Diseñador'), ('2','Operador'), ('3','Comercial')],
         validators=[DataRequired( message ="el campo es obligatorio")])
     
+    usernameB = StringField('usernameB',
+        validators=[DataRequired( message = "el campo es obligatorio")])
+
+    passwordB = PasswordField ('passwordB',
+        validators=[DataRequired( message = "el campo es obligatorio"),
+        Length(min = 6, message=("la contraseña tiene que tener como minimo 6 caracteres"))])
+
     def validate_email(form, email):
         if ((User.query.filter_by(email=email.data).first()) != None):
             raise ValidationError("el email no esta disponible")
