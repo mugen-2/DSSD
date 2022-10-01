@@ -40,6 +40,14 @@ class User(db.Model, UserMixin):
         db.session.delete(user)
         db.session.commit()
 
+    def getUserB(user_id):
+        user = User.query.filter_by(id=user_id).first()
+        return user.usernameB
+
+    def getPasswordB(user_id):
+        user = User.query.filter_by(id=user_id).first()
+        return user.passwordB 
+
 """ def setUserB(user_id,usernameB,passwordB):
         user = User.query.filter_by(id=user_id)
         user.passwordB = passwordB
