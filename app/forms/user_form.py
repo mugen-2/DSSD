@@ -38,7 +38,7 @@ class Form_usuario_new(FlaskForm):
 
     passwordB = PasswordField ('passwordB',
         validators=[DataRequired( message = "el campo es obligatorio"),
-        Length(min = 6, message=("la contraseña tiene que tener como minimo 6 caracteres"))])
+        Length(min = 3, message=("la contraseña tiene que tener como minimo 6 caracteres"))])
 
     def validate_email(form, email):
         if ((User.query.filter_by(email=email.data).first()) != None):
