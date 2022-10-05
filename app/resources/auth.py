@@ -27,11 +27,12 @@ def authenticate():
         
         flash('Se ha logueado correctamente')    
         login_user(user)
-        passwordB = User.getPasswordB(user.id)
-        userB= User.getUserB(user.id)
-        identification = {'username':userB, 'password': passwordB}
-        response = requests.post("http://localhost:8080/bonita/loginservice", identification)
-        session["cookie"] = response.cookies.get_dict()["X-Bonita-API-Token"]
+        if user.area != "ADMIN":
+            passwordB = User.getPasswordB(user.id)
+            userB= User.getUserB(user.id)
+            identification = {'username':userB, 'password': passwordB}
+            response = requests.post("http://localhost:8080/bonita/loginservice", identification)
+            session["cookie"] = response.cookies.get_dict()["X-Bonita-API-Token"]
         return redirect(url_for("home"))
     else:
         flash('credenciales invalidas, intente nuevamente')
@@ -39,7 +40,8 @@ def authenticate():
 
 @login_required
 def logout():
-    session.pop('coockie', None)
-    response = requests.get("http://localhost:8080/bonita/logoutservice")
+    if current_user.area != "ADMIN":
+        session.pop('coockie', None)
+        response = requests.get("http://localhost:8080/bonita/logoutservice")
     logout_user()
     return redirect(url_for("auth_login"))
