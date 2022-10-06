@@ -6,7 +6,7 @@ from sqlalchemy.util.langhelpers import NoneType
 from werkzeug.security import check_password_hash, generate_password_hash
 from flask_login import login_user, logout_user, login_required, current_user
 from app.models.user import User
-import requests
+import requests, ast
 
 import json
 import requests
@@ -33,6 +33,7 @@ def authenticate():
             identification = {'username':userB, 'password': passwordB}
             response = requests.post("http://localhost:8080/bonita/loginservice", identification)
             session["cookie"] = response.cookies.get_dict()["X-Bonita-API-Token"]
+            session["js"] = response.cookies.get_dict()["JSESSIONID"]
         return redirect(url_for("home"))
     else:
         flash('credenciales invalidas, intente nuevamente')
