@@ -35,11 +35,11 @@ def create():
         Collection.crear(nombre, tipo, plazoF, fechaL)
         cookie = session.get("cookie")
         js = session.get("js")
-        headers = {'Cookie': js, 'X-Bonita-API-Token': cookie,}
-        print(headers)
+        aux = "bonita.tenant=1; BOS_Locale=es; JSESSIONID="+js+"; X-Bonita-API-Token="+cookie
+        headers = {'Cookie': aux}
         response = requests.get(url="http://localhost:8080/bonita/API/bpm/process/?s=Diseño",headers=headers)
-        print(response)
-        #processid = aux["id"]
-        #requests.post("http://localhost:8080/bonita/API/bpm/process/"+processid+"/instantiation", headers = headers)
+        processid = response.json()[0]["id"]
+        headers = {'Cookie': aux, "X-Bonita-API-Token": cookie}
+        requests.post("http://localhost:8080/bonita/API/bpm/process/"+processid+"/instantiation", headers = headers)
         return redirect(url_for("collection_index"))
     return render_template("collection/new.html",form=form) 
