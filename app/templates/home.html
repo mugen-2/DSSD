@@ -7,7 +7,9 @@
   <h1>Inicio</h1>
   {%if current_user.is_authenticated%}
     <p>Página de inicio de la aplicación</p>
+    {% if 'Diseñador' in rol %}
     <a href="{{ url_for('collection_index') }}" class="link"> Colecciones </a>
+    {% endif %}
     <a href="{{ url_for('user_index') }}" class="link"> Usuarios </a>
   {% else %}
     <a href="{{ url_for('auth_login') }}" class="link">Iniciar sesión</a>
