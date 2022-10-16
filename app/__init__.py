@@ -1,5 +1,5 @@
 from os import path, environ, urandom
-from flask import Flask, render_template, g, Blueprint
+from flask import Flask, render_template, g, Blueprint, session
 from flask_session import Session
 from flask_login import LoginManager
 from config import config
@@ -72,7 +72,9 @@ def create_app(environment="development"):
     # Ruta para el Home (usando decorator)
     @app.route("/")
     def home():
-        return render_template("home.html")
+        rol= session["rol"]
+        print(rol)
+        return render_template("home.html",rol=rol)
 
     # Rutas de API-REST (usando Blueprints)
     #api = Blueprint("api", __name__, url_prefix="/api")

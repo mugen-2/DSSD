@@ -24,6 +24,7 @@ def authenticate():
     
 
     if user and check_password_hash(user.password, password):
+        session["rol"] = "ADMIN"
         if user.area != "ADMIN":
             passwordB = User.getPasswordB(user.id)
             userB= User.getUserB(user.id)
@@ -35,7 +36,18 @@ def authenticate():
             print(response)
             session["cookie"] = response.cookies.get_dict()["X-Bonita-API-Token"]
             session["js"] = response.cookies.get_dict()["JSESSIONID"]
-        flash('Se ha logueado correctamente')    
+            session["JSE"] = "JSESSIONID=" + response.cookies.get("JSESSIONID")
+            userBID= getUserBID()
+            params = {"f": "user_id=" + userBID, "d": "role_id"}  
+            headers = {
+                "Cookie": session["JSE"],
+                "X-Bonita-API-Token": session["cookie"]
+            }
+            URL="http://localhost:8080/bonita/API/identity/membership"
+            response = requests.Session().get(URL,headers=headers,params=params)
+            session["rol"] = response.json()[0]["role_id"]["name"]
+
+        flash('Se ha logueado correctamente') 
         login_user(user)
         return redirect(url_for("home"))
     else:
@@ -45,7 +57,18 @@ def authenticate():
 @login_required
 def logout():
     if current_user.area != "ADMIN":
-        session.pop('coockie', None)
+        #session.pop('coockie', None)
+        for key in list(session.keys()):
+            session.pop(key)
         response = requests.get("http://localhost:8080/bonita/logoutservice")
     logout_user()
     return redirect(url_for("auth_login"))
+
+def getUserBID():
+        headers = {
+            "Cookie": session["JSE"],
+            "X-Bonita-API-Token": session["cookie"]
+        }
+        response = requests.get("http://localhost:8080/bonita/API/system/session/unusedid",headers=headers) 
+        userBId=response.json()["user_id"]
+        return userBId
