@@ -24,16 +24,19 @@ def authenticate():
     
 
     if user and check_password_hash(user.password, password):
-        
-        flash('Se ha logueado correctamente')    
-        login_user(user)
         if user.area != "ADMIN":
             passwordB = User.getPasswordB(user.id)
             userB= User.getUserB(user.id)
             identification = {'username':userB, 'password': passwordB}
             response = requests.post("http://localhost:8080/bonita/loginservice", identification)
+            if(response.status_code == 401):
+                flash('Credenciales de la organizacion invalidas')
+                return redirect(url_for("auth_login"))
+            print(response)
             session["cookie"] = response.cookies.get_dict()["X-Bonita-API-Token"]
             session["js"] = response.cookies.get_dict()["JSESSIONID"]
+        flash('Se ha logueado correctamente')    
+        login_user(user)
         return redirect(url_for("home"))
     else:
         flash('credenciales invalidas, intente nuevamente')

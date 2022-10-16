@@ -18,10 +18,12 @@ def index():
       .paginate(page=page, per_page=5, error_out=False)
    return render_template("user/index.html", users=users)
 
+@login_required
 def new():
    form = Form_usuario_new()
    return render_template("user/new.html", form=form)
 
+@login_required
 def create():
    form = Form_usuario_new()
    if (form.validate_on_submit()):
@@ -41,6 +43,7 @@ def create():
 
    return render_template("user/new.html",form=form) 
 
+@login_required
 def delete(user_id):
    user = User.query.filter_by(id=user_id).first()
    if(user):
