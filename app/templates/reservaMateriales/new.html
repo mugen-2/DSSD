@@ -1,0 +1,30 @@
+{% extends "layout.html" %}
+{% block title %}Reserva de Materiales{% endblock %}
+{% block head %}
+  {{ super() }}
+{% endblock %}
+{% block content %}
+  <h1>Crear una reserva de materiales </h1>
+  <form class="form-control" action="{{ url_for('reservaMateriales_create', idcoleccion = idcoleccion) }}" method="POST" novalidate>
+    {{form.hidden_tag()}}
+    <label for="nombre">Nombre del material</label>
+    {{form.nombre}}
+    {% for error in form.nombre.errors %}
+      <span style="color:red;" >{{error}}</span>
+    {% endfor %}
+    <br>
+    
+    <label for="cantidad">Cantidad</label>
+    {{form.cantidad}}
+    {% for error in form.cantidad.errors %}
+    <span style="color:red;" >{{error}}</span>
+    {% endfor %}
+    <br>
+
+    <p>
+      <input type="submit" value="Crear">
+      <button type="reset">Limpiar</button>
+    </p>
+  </form>
+  <a href="{{ url_for('reservaMateriales_index', idcoleccion = idcoleccion) }}" class="link">Volver</a>
+{% endblock %}

@@ -11,6 +11,7 @@
   {% for collection in collections.items %}
   <li>
     {{ collection.nombre }}  
+    <a href="{{ url_for('reservaMateriales_index', idcoleccion = collection.id) }}" class="link">Reservar materiales</a>
   </li> 
   {% endfor %}
   <a href="{{ url_for('collection_new') }}" class="link">Nueva</a>
