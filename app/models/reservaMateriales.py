@@ -12,7 +12,6 @@ class ReservaMateriales(db.Model, UserMixin):
     idcoleccion = Column(Integer)
     nombre = Column(String(100))
     cantidad = Column(Integer)
-    #google=Column(TINYINT)
 
     def __init__(self, nombre=None, cantidad=None, idcoleccion=idcoleccion):
         self.nombre = nombre
