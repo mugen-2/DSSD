@@ -33,7 +33,7 @@ def authenticate():
             if(response.status_code == 401):
                 flash('Credenciales de la organizacion invalidas')
                 return redirect(url_for("auth_login"))
-            print(response)
+            #print(response)
             session["cookie"] = response.cookies.get_dict()["X-Bonita-API-Token"]
             session["js"] = response.cookies.get_dict()["JSESSIONID"]
             session["JSE"] = "JSESSIONID=" + response.cookies.get("JSESSIONID")

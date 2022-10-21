@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+{% block title %}Lista{% endblock %}
+{% block head %}
+  {{ super() }}
+{% endblock %}
+{% block content %}
+  <h1>Lista de materiales</h1>
+  {% for materiales in materiales %}
+  <li>
+    Empresa: {{ materiales.empresa }} /
+    Material: {{ materiales.meterial }} /
+    Cantidad: {{ materiales.cantidad }} /
+    Precio: {{ materiales.precio }} 
+  </li> 
+  {% endfor %}
+  <br>
+  <a href="{{ url_for('reservaMateriales_index', idcoleccion = idcoleccion) }}" class="link">Volver</a>
+{% endblock %}

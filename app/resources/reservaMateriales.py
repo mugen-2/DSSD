@@ -40,3 +40,12 @@ def create(idcoleccion):
         requests.post("http://localhost:8080/bonita/API/bpm/process/"+processid+"/instantiation", headers = headers)
         return redirect(url_for("reservaMateriales_index", idcoleccion = idcoleccion))
     return render_template("reservaMateriales/new.html",form=form) 
+
+
+def list(idcoleccion):
+    response = requests.get("https://dssdapi.fly.dev/api/materiales/")
+    print (response)
+    materiales = response.json()["materiales"]
+    print (materiales)
+    
+    return render_template("reservaMateriales/list.html",materiales=materiales, idcoleccion=idcoleccion) 
