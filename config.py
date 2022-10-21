@@ -9,8 +9,7 @@ class Config(object):
     DB_PASS = "db_pass"
     DB_NAME = "db_name"
     SECRET_KEY = "secret"
-    #GOOGLE_CLIENT_SECRET="google_client_secret"
-    #GOOGLE_CLIENT_ID= "google_client_id"
+
 
     @staticmethod
     def configure(app):
@@ -20,9 +19,6 @@ class Config(object):
 
 class ProductionConfig(Config):
     """Production configuration."""
-
-    #GOOGLE_CLIENT_SECRET = environ.get("GOOGLE_CLIENT_SECRET","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")
-    #GOOGLE_CLIENT_ID= environ.get("GOOGLE_CLIENT_ID","511645563531-euah8nadpcuu1dch1eee0k8n6ifd3cmo.apps.googleusercontent.com")
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_DATABASE_URI = (f"postgresql://postgres:admin@localhost:5432/bddssd")
 

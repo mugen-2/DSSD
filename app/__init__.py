@@ -10,13 +10,8 @@ from app.resources import user, collection, auth, reservaMateriales
 from app.helpers import handler
 from app.helpers import auth as helper_auth
 from oauthlib.oauth2 import WebApplicationClient
-from flask_cors import CORS
 
 GOOGLE_CLIENT_ID = environ.get("GOOGLE_CLIENT_ID", "511645563531-euah8nadpcuu1dch1eee0k8n6ifd3cmo.apps.googleusercontent.com")
-#GOOGLE_CLIENT_SECRET = environ.get("GOOGLE_CLIENT_SECRET", "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")
-#GOOGLE_DISCOVERY_URL = (
-#    "https://accounts.google.com/.well-known/openid-configuration"
-#)
 
 def create_app(environment="development"):
 

@@ -13,7 +13,6 @@ class Collection(db.Model, UserMixin):
     tipo = Column(String(100))
     plazoF = Column(Integer)
     fechaL = Column(DateTime)
-    #google=Column(TINYINT)
 
     def __init__(self, nombre=None, tipo=None, plazoF=None, fechaL=None):
         self.nombre = nombre
