@@ -5,15 +5,13 @@
 {% endblock %}
 {% block content %}
   <h1>Lista de materiales</h1>
-  {% for materiales in materiales %}
+  {% for material in materiales %}
   <li>
-    Empresa: {{ materiales.empresa }} /
-    Material: {{ materiales.meterial }} /
-    Cantidad: {{ materiales.cantidad }} /
-    Precio: {{ materiales.precio }}   
-
-    <br>
-    Cantidad (input integer)
+    Empresa: {{ material["Empresa"] }} /
+    Material: {{ material["Nombre"] }} /
+    Cantidad: {{ material["Cantidad"] }} /
+    Precio: {{ material["Costo"] }}   ----
+    <a href="{{ url_for('reservaMateriales_index', idcoleccion = idcoleccion) }}" class="link">Reservar</a>
 
   </li> 
   {% endfor %}

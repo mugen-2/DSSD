@@ -45,7 +45,6 @@ def create(idcoleccion):
 def list(idcoleccion):
     response = requests.get("https://dssdapi.fly.dev/api/materiales/")
     print (response)
-    materiales = response.json()["materiales"]
+    materiales = response.json()["materiales"][0]
     print (materiales)
-    
     return render_template("reservaMateriales/list.html",materiales=materiales, idcoleccion=idcoleccion) 
