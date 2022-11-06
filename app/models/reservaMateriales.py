@@ -10,15 +10,13 @@ class ReservaMateriales(db.Model, UserMixin):
     __tablename__ = "reservaMateriales"
     id = Column(Integer,primary_key=True)
     idcoleccion = Column(Integer)
-    nombre = Column(String(100))
-    cantidad = Column(Integer)
+    idreserva = Column(Integer)
 
-    def __init__(self, nombre=None, cantidad=None, idcoleccion=idcoleccion):
-        self.nombre = nombre
-        self.cantidad = cantidad
+    def __init__(self, idreserva = idreserva, idcoleccion=idcoleccion):
+        self.idreserva = idreserva
         self.idcoleccion = idcoleccion
 
-    def crear(nombre, cantidad, idcoleccion):
-        reservaMateriales= ReservaMateriales(nombre,cantidad,idcoleccion)
+    def crear(idreserva, idcoleccion):
+        reservaMateriales= ReservaMateriales(idreserva,idcoleccion)
         db.session.add(reservaMateriales)
         db.session.commit()
