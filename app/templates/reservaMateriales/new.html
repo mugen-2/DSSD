@@ -8,12 +8,16 @@
   <form class="form-control" action="{{ url_for('reservaMateriales_create', idcoleccion = idcoleccion) }}" method="POST" novalidate>
     {{form.hidden_tag()}}
 
-    
-   
-    
     <label for="cantidad">Cantidad</label>
     {{form.cantidad}}
     {% for error in form.cantidad.errors %}
+    <span style="color:red;" >{{error}}</span>
+    {% endfor %}
+    <br>
+
+    <label for="FechaEntrega">Fecha de entrega</label>
+    {{form.FechaEntrega}}
+    {% for error in form.FechaEntrega.errors %}
     <span style="color:red;" >{{error}}</span>
     {% endfor %}
     <br>

@@ -16,4 +16,5 @@ class Form_reservaMateriales_new(FlaskForm):
     cantidad= IntegerField('cantidad', 
         validators=[DataRequired( message = "el campo es obligatorio")])
     
-    
+    FechaEntrega= DateField('FechaEntrega', 
+        validators=[DataRequired( message = "el campo es obligatorio")])

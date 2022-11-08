@@ -25,9 +25,11 @@ def list(idcoleccion):
     materiales = response.json()["materiales"][0]
     return render_template("reservaMateriales/list.html",materiales=materiales, idcoleccion=idcoleccion) 
 
-def new(idcoleccion):
+def new(idcoleccion, cantidad):
     form = Form_reservaMateriales_new()
-    #print (num)
+    
+    cantidad1 = json.loads(cantidad)
+    print (cantidad1[0])
     return render_template("reservaMateriales/new.html", form=form, idcoleccion=idcoleccion) 
 
 def create(idcoleccion):
