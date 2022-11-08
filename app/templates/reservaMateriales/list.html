@@ -11,7 +11,7 @@
     Material: {{ material["Nombre"] }} /
     Cantidad: {{ material["Cantidad"] }} /
     Precio: {{ material["Costo"] }}   ----
-    <a href="{{ url_for('reservaMateriales_index', idcoleccion = idcoleccion) }}" class="link">Reservar</a>
+    <a href="{{ url_for('reservaMateriales_new', idcoleccion = idcoleccion }}" class="link">Reservar</a>
 
   </li> 
   {% endfor %}

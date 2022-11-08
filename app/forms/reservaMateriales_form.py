@@ -10,8 +10,8 @@ from app.models.reservaMateriales import ReservaMateriales
 class Form_reservaMateriales_new(FlaskForm):
 
 
-    nombre= StringField('nombre', 
-        validators=[DataRequired( message = "el campo es obligatorio")])
+    #nombre= StringField('nombre', 
+        #validators=[DataRequired( message = "el campo es obligatorio")])
 
     cantidad= IntegerField('cantidad', 
         validators=[DataRequired( message = "el campo es obligatorio")])

@@ -66,9 +66,9 @@ def create_app(environment="development"):
 
     # Rutas Reserva Materiales
     app.add_url_rule("/reservaMateriales/<idcoleccion>", "reservaMateriales_index", reservaMateriales.index)
-    app.add_url_rule("/reservaMateriales/<idcoleccion>", "reservaMateriales_create", reservaMateriales.create, methods=["POST"])
-    app.add_url_rule("/reservaMateriales/nuevo/<idcoleccion>", "reservaMateriales_new", reservaMateriales.new)
     app.add_url_rule("/reservaMateriales/listarMateriales/<idcoleccion>", "listarMateriales", reservaMateriales.list)
+    app.add_url_rule("/reservaMateriales/nuevo/<idcoleccion>", "reservaMateriales_new", reservaMateriales.new)
+    app.add_url_rule("/reservaMateriales/<idcoleccion>", "reservaMateriales_create", reservaMateriales.create, methods=["POST"])
 
     # Ruta para el Home (usando decorator)
     @app.route("/")

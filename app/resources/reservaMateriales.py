@@ -20,8 +20,14 @@ def index(idcoleccion):
             .paginate(page=page, per_page=5, error_out=False)
     return render_template("reservaMateriales/index.html", reservaMateriales=reservaMateriales, idcoleccion=idcoleccion)
 
+def list(idcoleccion):
+    response = requests.get("https://dssdapi.fly.dev/api/materiales/")
+    materiales = response.json()["materiales"][0]
+    return render_template("reservaMateriales/list.html",materiales=materiales, idcoleccion=idcoleccion) 
+
 def new(idcoleccion):
     form = Form_reservaMateriales_new()
+    #print (num)
     return render_template("reservaMateriales/new.html", form=form, idcoleccion=idcoleccion) 
 
 def create(idcoleccion):
@@ -41,10 +47,3 @@ def create(idcoleccion):
         return redirect(url_for("reservaMateriales_index", idcoleccion = idcoleccion))
     return render_template("reservaMateriales/new.html",form=form) 
 
-
-def list(idcoleccion):
-    response = requests.get("https://dssdapi.fly.dev/api/materiales/")
-    print (response)
-    materiales = response.json()["materiales"][0]
-    print (materiales)
-    return render_template("reservaMateriales/list.html",materiales=materiales, idcoleccion=idcoleccion) 

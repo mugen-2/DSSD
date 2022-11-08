@@ -7,12 +7,9 @@
   <h1>Crear una reserva de materiales </h1>
   <form class="form-control" action="{{ url_for('reservaMateriales_create', idcoleccion = idcoleccion) }}" method="POST" novalidate>
     {{form.hidden_tag()}}
-    <label for="nombre">Nombre del material</label>
-    {{form.nombre}}
-    {% for error in form.nombre.errors %}
-      <span style="color:red;" >{{error}}</span>
-    {% endfor %}
-    <br>
+
+    
+   
     
     <label for="cantidad">Cantidad</label>
     {{form.cantidad}}
@@ -26,5 +23,5 @@
       <button type="reset">Limpiar</button>
     </p>
   </form>
-  <a href="{{ url_for('reservaMateriales_index', idcoleccion = idcoleccion) }}" class="link">Volver</a>
+  <a href="{{ url_for('listarMateriales', idcoleccion = idcoleccion) }}" class="link">Volver</a>
 {% endblock %}
