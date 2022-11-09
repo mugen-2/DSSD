@@ -25,19 +25,18 @@ def list(idcoleccion):
     materiales = response.json()["materiales"][0]
     return render_template("reservaMateriales/list.html",materiales=materiales, idcoleccion=idcoleccion) 
 
-def new(idcoleccion, cantidad):
+def new(idcoleccion):
     form = Form_reservaMateriales_new()
-    
-    cantidad1 = json.loads(cantidad)
-    print (cantidad1[0])
     return render_template("reservaMateriales/new.html", form=form, idcoleccion=idcoleccion) 
 
 def create(idcoleccion):
     form = Form_reservaMateriales_new()    
     if (form.validate_on_submit()):
-        nombre = request.form.get("nombre")
+        fechaE = request.form.get("FechaEntrega")
         cantidad = request.form.get("cantidad")
-        ReservaMateriales.crear(nombre, cantidad, idcoleccion)
+
+        
+        #ReservaMateriales.crear(fechaE, cantidad, idcoleccion)
         cookie = session.get("cookie")
         js = session.get("js")
         aux = "bonita.tenant=1; BOS_Locale=es; JSESSIONID="+js+"; X-Bonita-API-Token="+cookie
