@@ -25,18 +25,22 @@ def list(idcoleccion):
     materiales = response.json()["materiales"][0]
     return render_template("reservaMateriales/list.html",materiales=materiales, idcoleccion=idcoleccion) 
 
-def new(idcoleccion):
+def new(idcoleccion, idmaterial):
     form = Form_reservaMateriales_new()
-    return render_template("reservaMateriales/new.html", form=form, idcoleccion=idcoleccion) 
+    return render_template("reservaMateriales/new.html", form=form, idcoleccion=idcoleccion, idmaterial=idmaterial) 
 
-def create(idcoleccion):
+def create(idcoleccion, idmaterial):
     form = Form_reservaMateriales_new()    
     if (form.validate_on_submit()):
-        fechaE = request.form.get("FechaEntrega")
+        #fechaE = request.form.get("FechaEntrega")
         cantidad = request.form.get("cantidad")
 
-        
-        #ReservaMateriales.crear(fechaE, cantidad, idcoleccion)
+        reserva = {'id': idmaterial, 'cantidad': cantidad}
+        response = requests.post("https://dssdapi.fly.dev/api/reserva/", reserva)
+        print (response)
+        #response seria el id de la reserva
+        ReservaMateriales.crear(response, idcoleccion)
+
         cookie = session.get("cookie")
         js = session.get("js")
         aux = "bonita.tenant=1; BOS_Locale=es; JSESSIONID="+js+"; X-Bonita-API-Token="+cookie
@@ -45,6 +49,7 @@ def create(idcoleccion):
         processid = response.json()[0]["id"]
         headers = {'Cookie': aux, "X-Bonita-API-Token": cookie}
         requests.post("http://localhost:8080/bonita/API/bpm/process/"+processid+"/instantiation", headers = headers)
+
         return redirect(url_for("reservaMateriales_index", idcoleccion = idcoleccion))
     return render_template("reservaMateriales/new.html",form=form) 
 

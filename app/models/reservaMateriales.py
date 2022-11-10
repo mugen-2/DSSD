@@ -17,6 +17,6 @@ class ReservaMateriales(db.Model, UserMixin):
         self.idcoleccion = idcoleccion
 
     def crear(idreserva, idcoleccion):
-        reservaMateriales= ReservaMateriales(idreserva,idcoleccion)
+        reservaMateriales = ReservaMateriales(idreserva,idcoleccion)
         db.session.add(reservaMateriales)
         db.session.commit()
