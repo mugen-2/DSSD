@@ -13,8 +13,9 @@ class Collection(db.Model, UserMixin):
     tipo = Column(String(100))
     plazoF = Column(Integer)
     fechaL = Column(DateTime)
+    caseId = Column(Integer)
 
-    def __init__(self, nombre=None, tipo=None, plazoF=None, fechaL=None):
+    def __init__(self, nombre=None, tipo=None, plazoF=None, fechaL=None, caseId= None):
         self.nombre = nombre
         self.tipo = tipo
         self.plazoF = plazoF
@@ -23,4 +24,10 @@ class Collection(db.Model, UserMixin):
     def crear(nombre, tipo, plazoF, fechaL):
         collection= Collection(nombre,tipo,plazoF,fechaL)
         db.session.add(collection)
+        db.session.commit()
+        return collection.id
+
+    def setCaseId(collection_id, caseId):
+        col= Collection.query.filter_by(id=collection_id).first()
+        col.caseId= caseId
         db.session.commit()

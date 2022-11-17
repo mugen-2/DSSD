@@ -35,7 +35,7 @@ def create():
         plazoF = request.form.get("plazoF")
         fechaL = request.form.get("fechaL")
         adicional = request.form.get("adi")
-        Collection.crear(nombre, tipo, plazoF, fechaL)
+        cId=Collection.crear(nombre, tipo, plazoF, fechaL)
         cookie = session.get("cookie")
         js = session.get("js")
         aux = "bonita.tenant=1; BOS_Locale=es; JSESSIONID="+js+"; X-Bonita-API-Token="+cookie
@@ -43,6 +43,9 @@ def create():
         response = requests.get(url="http://localhost:8080/bonita/API/bpm/process/?s=Diseño",headers=headers)
         processid = response.json()[0]["id"]
         headers = {'Cookie': aux, "X-Bonita-API-Token": cookie}
-        requests.post("http://localhost:8080/bonita/API/bpm/process/"+processid+"/instantiation", headers = headers)
+        response = requests.post("http://localhost:8080/bonita/API/bpm/process/"+processid+"/instantiation", headers = headers)
+        caseid = response.json()["caseId"]
+        Collection.setCaseId(cId,caseid)
+
         return redirect(url_for("collection_index"))
     return render_template("collection/new.html",form=form) 
