@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+{% block title %}Espacios de fabricación{% endblock %}
+
+{% block head %}
+  {{ super() }} 
+{% endblock %}
+
+{% block content %}
+  <h1>Espacios de fabricacion</h1>
+
+  {% for espacios in espaciosFabricacion %}
+  <li>
+    Fabricante: {{ espacios["Nombre"] }}
+  </li> 
+  {% endfor %}
+  
+  <br>
+  
+  <a href="{{ url_for('reservaMateriales_index', idcoleccion=idcoleccion) }}" class="link">Volver</a>
+
+{% endblock %}

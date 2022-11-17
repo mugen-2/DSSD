@@ -5,7 +5,7 @@ from flask_login import LoginManager
 from config import config
 from app import db
 from app.models.user import User
-from app.resources import user, collection, auth, reservaMateriales
+from app.resources import user, collection, auth, reservaMateriales, espacioFabricacion
 #from app.resources import auth
 from app.helpers import handler
 from app.helpers import auth as helper_auth
@@ -69,6 +69,9 @@ def create_app(environment="development"):
     app.add_url_rule("/reservaMateriales/listarMateriales/<idcoleccion>", "listarMateriales", reservaMateriales.list)
     app.add_url_rule("/reservaMateriales/nuevo/<idcoleccion>/<idmaterial>", "reservaMateriales_new", reservaMateriales.new)
     app.add_url_rule("/reservaMateriales/<idcoleccion>/<idmaterial>", "reservaMateriales_create", reservaMateriales.create, methods=["POST"])
+
+    # Rutas Espacios de Fabricación
+    app.add_url_rule("/espacioFabricacion/<idcoleccion>", "espacioFabricacion_index", espacioFabricacion.index)
 
     # Ruta para el Home (usando decorator)
     @app.route("/")

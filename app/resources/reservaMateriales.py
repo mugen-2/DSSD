@@ -17,7 +17,17 @@ import json
 def index(idcoleccion):
     page =request.args.get('page',1,type=int)
     reservaMateriales = ReservaMateriales.query.filter_by(idcoleccion = idcoleccion)\
-            .paginate(page=page, per_page=5, error_out=False)
+            .paginate(page=page, per_page=5, error_out=False) #id de todas las reservas para esa coleccion
+    
+    #i = 0
+    #reservaMateriales = []
+    #while i < len(idReservas):
+        #materiales = requests.get("https://dssdapi.fly.dev/api/materiales/" + idReservas[i].reservas)
+        #print (materiales.json)
+        #print(materiales.content)
+        #reservaMateriales.append({"Nombre": materiales.nombre,"Cantidad": materiales.cantidad})
+        #i = i + 1
+    
     return render_template("reservaMateriales/index.html", reservaMateriales=reservaMateriales, idcoleccion=idcoleccion)
 
 def list(idcoleccion):
@@ -32,7 +42,7 @@ def new(idcoleccion, idmaterial):
 def create(idcoleccion, idmaterial):
     form = Form_reservaMateriales_new()    
     if (form.validate_on_submit()):
-        #fechaE = request.form.get("FechaEntrega")
+        fechaE = request.form.get("FechaEntrega")
         cantidad = request.form.get("cantidad")
         cantidad = int(cantidad)
 
@@ -41,7 +51,7 @@ def create(idcoleccion, idmaterial):
         usuario = {'nombre': nombre, 'contra': contra}
         cookie = requests.post("https://dssdapi.fly.dev/api/log/", usuario)
 
-        reserva = {'id': idmaterial, 'cantidad': cantidad, 'cookie': cookie.content}
+        reserva = {'id': idmaterial, 'cantidad': cantidad, 'fecha': fechaE, 'cookie': cookie.content}
         idreserva = requests.post("https://dssdapi.fly.dev/api/reserva/", reserva)
         ReservaMateriales.crear(int(idreserva.content), idcoleccion)
 

@@ -15,6 +15,12 @@
     {% endfor %}
     <br>
 
+    <label for="FechaEntrega">Fecha de entrega</label>
+    {{form.FechaEntrega}}
+    {% for error in form.FechaEntrega.errors %}
+    <span style="color:red;" >{{error}}</span>
+    {% endfor %}
+    <br>
     
     <p>
       <input type="submit" value="Crear">
