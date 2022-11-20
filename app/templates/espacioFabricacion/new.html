@@ -1,0 +1,31 @@
+{% extends "layout.html" %}
+{% block title %}Espacio de Fabricacion{% endblock %}
+{% block head %}
+  {{ super() }}
+{% endblock %}
+{% block content %}
+  <h1>Crear una reserva de espacio de fabricacion </h1>
+  <form class="form-control" action="{{ url_for('espacioFabricacion_create', idcoleccion = idcoleccion, idfabricante = idfabricante) }}" method="POST" novalidate>
+    {{form.hidden_tag()}}
+
+    <label for="fecha1">Fecha 1</label>
+    {{form.fecha1}}
+    {% for error in form.fecha1.errors %}
+    <span style="color:red;" >{{error}}</span>
+    {% endfor %}
+    <br>
+
+    <label for="fecha2">Fecha 2</label>
+    {{form.fecha2}}
+    {% for error in form.fecha2.errors %}
+    <span style="color:red;" >{{error}}</span>
+    {% endfor %}
+    <br>
+    
+    <p>
+      <input type="submit" value="Crear">
+      <button type="reset">Limpiar</button>
+    </p>
+  </form>
+  <a href="{{ url_for('espacioFabricacion_index', idcoleccion = idcoleccion) }}" class="link">Volver</a>
+{% endblock %}

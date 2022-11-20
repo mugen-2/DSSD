@@ -72,6 +72,8 @@ def create_app(environment="development"):
 
     # Rutas Espacios de Fabricación
     app.add_url_rule("/espacioFabricacion/<idcoleccion>", "espacioFabricacion_index", espacioFabricacion.index)
+    app.add_url_rule("/espacioFabricacion/nuevo/<idcoleccion>/<idfabricante>", "espacioFabricacion_new", espacioFabricacion.new)
+    app.add_url_rule("/espacioFabricacion/<idcoleccion>/<idfabricante>", "espacioFabricacion_create", espacioFabricacion.create, methods=["POST"])
 
     # Ruta para el Home (usando decorator)
     @app.route("/")
