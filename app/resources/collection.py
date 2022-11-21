@@ -19,7 +19,8 @@ def index():
     page =request.args.get('page',1,type=int)
     collections = Collection.query.order_by(Collection.nombre)\
             .paginate(page=page, per_page=5, error_out=False)
-    return render_template("collection/index.html",collections=collections)
+    rol= session["rol"]
+    return render_template("collection/index.html",collections=collections,rol=rol)
 
 @login_required
 def new():

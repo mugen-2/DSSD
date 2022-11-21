@@ -11,10 +11,14 @@
   {% for collection in collections.items %}
   <li>
     {{ collection.nombre }}  
+    {% if 'Operador' in rol %}
     <a href="{{ url_for('reservaMateriales_index', idcoleccion = collection.id) }}" class="link">Reservar materiales</a>
+    {% endif %}
   </li> 
   {% endfor %}
+  {% if 'Diseñador' in rol %}
   <a href="{{ url_for('collection_new') }}" class="link">Nueva</a>
+  {% endif %}
   <br>
   
   
