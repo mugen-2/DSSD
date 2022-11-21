@@ -46,6 +46,13 @@ def create():
         response = requests.post("http://localhost:8080/bonita/API/bpm/process/"+processid+"/instantiation", headers = headers)
         caseid = response.json()["caseId"]
         Collection.setCaseId(cId,caseid)
+        caseid=str(caseid)
+        response = requests.get(url="http://localhost:8080/bonita/API/bpm/humanTask?c=10&p=0&f=caseId%3D"+caseid+"",headers=headers)
+        taskId = response.json()[0]["id"]
+        response = requests.put(url="http://localhost:8080/bonita/API/bpm/userTask/"+taskId+"",json={"assigned_id":"4"},headers=headers)
+        response = requests.post(url="http://localhost:8080/bonita/API/bpm/userTask/"+taskId+"/execution",headers=headers)
+        print (response)
+
 
         return redirect(url_for("collection_index"))
     return render_template("collection/new.html",form=form) 
