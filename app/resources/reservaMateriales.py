@@ -16,19 +16,17 @@ import json
 
 def index(idcoleccion):
     page =request.args.get('page',1,type=int)
-    reservaMateriales = ReservaMateriales.query.filter_by(idcoleccion = idcoleccion)\
-            .paginate(page=page, per_page=5, error_out=False) #id de todas las reservas para esa coleccion
+    reservaMateriales = ReservaMateriales.query.filter_by(idcoleccion = idcoleccion).all() #id de todas las reservas para esa coleccion
     
-    #i = 0
-    #reservaMateriales = []
-    #while i < len(idReservas):
-        #materiales = requests.get("https://dssdapi.fly.dev/api/materiales/" + idReservas[i].reservas)
-        #print (materiales.json)
-        #print(materiales.content)
-        #reservaMateriales.append({"Nombre": materiales.nombre,"Cantidad": materiales.cantidad})
-        #i = i + 1
+    print(type(reservaMateriales))
+    i = 0
+    aux = []
+    while i < len(reservaMateriales):
+        materiales = requests.get("https://dssdapi.fly.dev/api/listarr/" + str(reservaMateriales[i].idreserva))
+        aux.append({"Nombre": materiales.json()["Material"],"Cantidad": materiales.json()["Cantidad"]})
+        i = i + 1
     
-    return render_template("reservaMateriales/index.html", reservaMateriales=reservaMateriales, idcoleccion=idcoleccion)
+    return render_template("reservaMateriales/index.html", reservaMateriales=aux, idcoleccion=idcoleccion)
 
 def list(idcoleccion):
     response = requests.get("https://dssdapi.fly.dev/api/materiales/")
