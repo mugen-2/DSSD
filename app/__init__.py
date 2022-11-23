@@ -1,7 +1,7 @@
 from os import path, environ, urandom
 from flask import Flask, render_template, g, Blueprint, session
 from flask_session import Session
-from flask_login import LoginManager
+from flask_login import LoginManager,current_user
 from config import config
 from app import db
 from app.models.user import User
@@ -78,7 +78,10 @@ def create_app(environment="development"):
     # Ruta para el Home (usando decorator)
     @app.route("/")
     def home():
-        rol= session["rol"]
+        if 'rol' in session.keys():
+            rol= session["rol"]
+        else:
+            rol= ""
         #print(rol)
         return render_template("home.html",rol=rol)
 
