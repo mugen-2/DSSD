@@ -11,14 +11,35 @@ from app.db import db
 from app.helpers.auth import authorized
 from flask_login import login_required,current_user
 from app.models.reservaMateriales import ReservaMateriales
+from app.models.collection import Collection
 import requests
 import json
 
 def index(idcoleccion):
+    cookie = session.get("cookie")
+    js = session.get("js")
+    aux = "bonita.tenant=1; BOS_Locale=es; JSESSIONID="+js+"; X-Bonita-API-Token="+cookie
+    headers = {'Cookie': aux, "X-Bonita-API-Token": cookie}
+    response = requests.get(url="http://localhost:8080/bonita/API/bpm/task/?s=Establecer materiales y fechas",headers=headers).json()
+    caseId = Collection.getCaseid(idcoleccion)
+    print(caseId)
+    print("--------------------------------------------------------")
+    for instancia in response:
+        print(instancia["caseId"])
+        if int(instancia["caseId"]) == int(caseId):
+            response2 = requests.get(url="http://localhost:8080/bonita/API/bpm/humanTask?c=10&p=0&f=caseId%3D"+str(caseId)+"",headers=headers)
+            print("--------------------------------------------------------")
+            print (response2)
+            taskId = response2.json()[0]["id"]
+            print(taskId)
+            response2 = requests.put(url="http://localhost:8080/bonita/API/bpm/userTask/"+taskId+"",json={"assigned_id":"18"},headers=headers)
+            print("--------------------------------------------------------")
+            print (response2)
+            response2 = requests.post(url="http://localhost:8080/bonita/API/bpm/userTask/"+taskId+"/execution",headers=headers)
+            print("--------------------------------------------------------")
+            print (response2)
     page =request.args.get('page',1,type=int)
     reservaMateriales = ReservaMateriales.query.filter_by(idcoleccion = idcoleccion).all() #id de todas las reservas para esa coleccion
-    
-    print(type(reservaMateriales))
     i = 0
     aux = []
     while i < len(reservaMateriales):
