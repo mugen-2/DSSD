@@ -21,6 +21,7 @@ def index(idcoleccion):
     aux = "bonita.tenant=1; BOS_Locale=es; JSESSIONID="+js+"; X-Bonita-API-Token="+cookie
     headers = {'Cookie': aux, "X-Bonita-API-Token": cookie}
     response = requests.get(url="http://localhost:8080/bonita/API/bpm/task/?s=Establecer materiales y fechas",headers=headers).json()
+    print(response)
     caseId = Collection.getCaseid(idcoleccion)
     print(caseId)
     print("--------------------------------------------------------")
@@ -36,8 +37,7 @@ def index(idcoleccion):
             print("--------------------------------------------------------")
             print (response2)
             response2 = requests.post(url="http://localhost:8080/bonita/API/bpm/userTask/"+taskId+"/execution",headers=headers)
-            print("--------------------------------------------------------")
-            print (response2)
+
     page =request.args.get('page',1,type=int)
     reservaMateriales = ReservaMateriales.query.filter_by(idcoleccion = idcoleccion).all() #id de todas las reservas para esa coleccion
     i = 0
@@ -50,9 +50,23 @@ def index(idcoleccion):
     return render_template("reservaMateriales/index.html", reservaMateriales=aux, idcoleccion=idcoleccion)
 
 def list(idcoleccion):
+    cookie = session.get("cookie")
+    js = session.get("js")
+    aux = "bonita.tenant=1; BOS_Locale=es; JSESSIONID="+js+"; X-Bonita-API-Token="+cookie
+    headers = {'Cookie': aux, "X-Bonita-API-Token": cookie}
+    response = requests.get(url="http://localhost:8080/bonita/API/bpm/task/?s=Reserva de materiales",headers=headers).json()    # Buscamos para mostrar o no un boton
+    reservar = False
+    caseId = Collection.getCaseid(idcoleccion)
+    print(caseId)
+    for instancia in response:
+        print(caseId)
+        print(instancia) 
+        if int(instancia["caseId"]) == int(caseId) and instancia["displayName"] == "Reserva de materiales":
+            reservar = True
+    print(reservar)
     response = requests.get("https://dssdapi.fly.dev/api/materiales/")
     materiales = response.json()["materiales"][0]
-    return render_template("reservaMateriales/list.html",materiales=materiales, idcoleccion=idcoleccion) 
+    return render_template("reservaMateriales/list.html",materiales=materiales, idcoleccion=idcoleccion, reservar = reservar) 
 
 def new(idcoleccion, idmaterial):
     form = Form_reservaMateriales_new()
