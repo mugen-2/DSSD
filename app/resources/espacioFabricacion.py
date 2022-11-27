@@ -48,9 +48,11 @@ def create(idcoleccion, idfabricante):
         #usuario = {'nombre': nombre, 'contra': contra}
         #cookie = requests.post("https://dssdapi.fly.dev/api/log/", usuario)
 
-        #reserva = {'fabricante': idfabricante, 'fecha1': fecha1, 'fecha2': fecha2}
-        #idreserva = requests.post("https://dssdapi.fly.dev/api/reservarf/", reserva)
-        #EspacioFabricacion.crear(int(idreserva.content), idcoleccion)
+        reserva= {'fabricante': idfabricante, 'fecha1': fecha1, 'fecha2': fecha2}
+        print(reserva)
+        idreserva = requests.post("https://dssdapi.fly.dev/api/reservarf/", reserva).json()
+        print("-----------------------------------------------------")
+        EspacioFabricacion.crear(int(idreserva["ReservaF"]), idcoleccion)
 
         cookie = session.get("cookie")
         js = session.get("js")
@@ -60,13 +62,16 @@ def create(idcoleccion, idfabricante):
         caseId = Collection.getCaseid(idcoleccion)
         for instancia in response:
              if int(instancia["caseId"]) == int(caseId) and instancia["displayName"] == "Reserva de espacio de fabricacion":
-                if(True): #Falta poder chequear el codigo de un fabricante en particular
+                response = requests.get(url="https://dssdapi.fly.dev/api/listarf/"+str(idfabricante)+"/").json()
+                if(response["Codigo"]!=54): #Falta poder chequear el codigo de un fabricante en particular
                     response = requests.put(url="http://localhost:8080/bonita/API/bpm/caseVariable/"+str(caseId)+"/hayQueImportar",json={"type":"java.lang.Boolean", "value": "true"},headers=headers)
                     print(response)
                 response2 = requests.get(url="http://localhost:8080/bonita/API/bpm/humanTask?c=10&p=0&f=caseId%3D"+str(caseId)+"",headers=headers)
                 taskId = response2.json()[0]["id"]
                 response2 = requests.put(url="http://localhost:8080/bonita/API/bpm/userTask/"+taskId+"",json={"assigned_id":"18"},headers=headers)
                 response2 = requests.post(url="http://localhost:8080/bonita/API/bpm/userTask/"+taskId+"/execution",headers=headers)
+                if(response["Codigo"]!=54):
+                    return redirect(url_for("espacioFabricacion_index", idcoleccion = idcoleccion)) #Hcer un formulario para la importacion en la etapa de fabricacion
         print(caseId)
 
         return redirect(url_for("espacioFabricacion_index", idcoleccion = idcoleccion))

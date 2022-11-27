@@ -12,7 +12,7 @@
   <li>
     Fabricante: {{ espacios["Nombre"] }}
 
-    <a href="{{ url_for('espacioFabricacion_new', idcoleccion = idcoleccion, idfabricante = espacios['Codigo'] ) }}" class="link">Reservar</a>
+    <a href="{{ url_for('espacioFabricacion_new', idcoleccion = idcoleccion, idfabricante = espacios['Id'] ) }}" class="link">Reservar</a>
 
   </li> 
   {% endfor %}
