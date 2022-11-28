@@ -30,3 +30,11 @@ class ReservaMateriales(db.Model, UserMixin):
 
     def reservasPorColeccion(idcoleccion):
         return ReservaMateriales.query.filter_by(idcoleccion=idcoleccion).all()
+
+    def terminaronTodasReservas(idcoleccion):
+        aux = True
+        reservas = ReservaMateriales.query.filter_by(idcoleccion=idcoleccion).all()
+        for reserva in reservas:
+            if reserva.estado != "si":
+                aux = False
+        return aux
