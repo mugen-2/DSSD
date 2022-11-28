@@ -71,8 +71,8 @@ def create(idcoleccion, idfabricante):
                 response2 = requests.put(url="http://localhost:8080/bonita/API/bpm/userTask/"+taskId+"",json={"assigned_id":"18"},headers=headers)
                 response2 = requests.post(url="http://localhost:8080/bonita/API/bpm/userTask/"+taskId+"/execution",headers=headers)
                 if(response["Codigo"]!=54):
-                    return redirect(url_for("espacioFabricacion_index", idcoleccion = idcoleccion)) #Hcer un formulario para la importacion en la etapa de fabricacion
+                    return redirect(url_for("espacioFabricacion_index", idcoleccion = idcoleccion)) #Hacer un formulario para la importacion en la etapa de fabricacion
         print(caseId)
 
-        return redirect(url_for("espacioFabricacion_index", idcoleccion = idcoleccion))
+        return redirect(url_for("collection_index", idcoleccion = idcoleccion))
     return render_template("espacioFabricacion/new.html", form=form, idcoleccion=idcoleccion, idfabricante=idfabricante) 

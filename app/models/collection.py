@@ -34,3 +34,6 @@ class Collection(db.Model, UserMixin):
     
     def getCaseid(id):
         return Collection.query.filter_by(id=id).first().caseId
+    
+    def detalle(id):
+        return Collection.query.filter_by(id=id).first()

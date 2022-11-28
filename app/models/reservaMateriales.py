@@ -1,5 +1,5 @@
 from typing import List
-from sqlalchemy import Table, Column, Integer, String, DateTime, ForeignKey, update
+from sqlalchemy import Table, Column, Integer, String, DateTime, ForeignKey, update, Boolean
 from sqlalchemy.sql import func
 from sqlalchemy.dialects.mysql import TINYINT
 from sqlalchemy.orm import relationship
@@ -11,12 +11,22 @@ class ReservaMateriales(db.Model, UserMixin):
     id = Column(Integer,primary_key=True)
     idcoleccion = Column(Integer)
     idreserva = Column(Integer)
+    estado = Column(String(100))
 
     def __init__(self, idreserva = idreserva, idcoleccion=idcoleccion):
         self.idreserva = idreserva
         self.idcoleccion = idcoleccion
+        self.estado = "no"
 
     def crear(idreserva, idcoleccion):
         reservaMateriales = ReservaMateriales(idreserva,idcoleccion)
         db.session.add(reservaMateriales)
         db.session.commit()
+    
+    def entregado(idreserva):
+        reserva = ReservaMateriales.query.filter_by(idreserva=idreserva).first()
+        reserva.estado = "si"
+        db.session.commit()
+
+    def reservasPorColeccion(idcoleccion):
+        return ReservaMateriales.query.filter_by(idcoleccion=idcoleccion).all()

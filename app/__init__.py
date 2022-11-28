@@ -63,6 +63,7 @@ def create_app(environment="development"):
     app.add_url_rule("/colecciones", "collection_index", collection.index)
     app.add_url_rule("/colecciones", "collection_create", collection.create, methods=["POST"])
     app.add_url_rule("/colecciones/nuevo", "collection_new", collection.new)
+    app.add_url_rule("/colecciones/detalle/<idcoleccion>", "collection_detalle", collection.detalle)
 
     # Rutas Reserva Materiales
     app.add_url_rule("/reservaMateriales/<idcoleccion>", "reservaMateriales_index", reservaMateriales.index)

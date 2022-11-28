@@ -11,6 +11,7 @@ from app.db import db
 from app.helpers.auth import authorized
 from flask_login import login_required,current_user
 from app.models.collection import Collection
+from app.models.reservaMateriales import ReservaMateriales
 import requests
 import json
 
@@ -57,3 +58,31 @@ def create():
 
         return redirect(url_for("collection_index"))
     return render_template("collection/new.html",form=form) 
+
+@login_required
+def detalle(idcoleccion):
+    coleccion = Collection.detalle(idcoleccion)
+    caseId = coleccion.caseId
+    cookie = session.get("cookie")
+    js = session.get("js")
+    aux = "bonita.tenant=1; BOS_Locale=es; JSESSIONID="+js+"; X-Bonita-API-Token="+cookie
+    headers = {'Cookie': aux, "X-Bonita-API-Token": cookie}
+    response = requests.get(url="http://localhost:8080/bonita/API/bpm/task/?s=Consultar fechas con proveedor",headers=headers).json()
+    for instancia in response:
+        if int(instancia["caseId"]) == int(caseId) and instancia["displayName"] == "Consultar fechas con proveedor":
+            reservas = ReservaMateriales.reservasPorColeccion(idcoleccion)
+            for reserva in reservas:
+                print(reserva.estado)
+                if reserva.estado == "no":
+                    print("sape")
+                    response2 = requests.get("https://dssdapi.fly.dev/api/listarr/"+str(reserva.idreserva)+"/").json()
+                    print(response2)
+                    if response2['Estado'] == "retrasado":
+                        response3 = requests.put(url="http://localhost:8080/bonita/API/bpm/caseVariable/"+str(caseId)+"/incumplimientoFechas",json={"type":"java.lang.Boolean", "value": "true"},headers=headers)
+                        flash("El material "+response2['Material']+" ha sido retrasado y debe de reestructurar la fecha de entrega")
+                        #Se puede cambiar el estado en la bd a retrasado para que sea mas facil chequear si mostramos el boton
+                    response2 = requests.get(url="http://localhost:8080/bonita/API/bpm/humanTask?c=10&p=0&f=caseId%3D"+str(caseId)+"",headers=headers)
+                    taskId = response2.json()[0]["id"]
+                    response2 = requests.put(url="http://localhost:8080/bonita/API/bpm/userTask/"+taskId+"",json={"assigned_id":"18"},headers=headers)
+                    response2 = requests.post(url="http://localhost:8080/bonita/API/bpm/userTask/"+taskId+"/execution",headers=headers)
+    return render_template("collection/detalle.html",collection = coleccion) 

@@ -1,0 +1,20 @@
+{% extends "layout.html" %}
+{% block title %}Colecciones{% endblock %}
+
+{% block head %}
+  {{ super() }} 
+{% endblock %}
+
+{% block content %}
+  <h1>Coleccion {{ collection.nombre }}</h1>
+
+  
+  <li>
+    
+  </li> 
+  
+  <br>
+  
+  <br>
+  <a href="{{ url_for('home') }}" class="link">Volver</a>
+{% endblock %}
