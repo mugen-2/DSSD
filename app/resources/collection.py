@@ -6,6 +6,7 @@ from app.models.user import User
 #from app.helpers.auth import authenticated
 from flask_wtf import FlaskForm
 from app.forms.collection_form import Form_collection_new
+from app.forms.newDate_form import Form_Date_new
 from werkzeug.security import generate_password_hash, check_password_hash
 from app.db import db
 from app.helpers.auth import authorized
@@ -128,6 +129,34 @@ def detalle(idcoleccion):
     aux = [] #Json con todos los materiales
     while i < len(reservaMateriales):
         materiales = requests.get("https://dssdapi.fly.dev/api/listarr/" + str(reservaMateriales[i].idreserva))
-        aux.append({"Nombre": materiales.json()["Material"],"Cantidad": materiales.json()["Cantidad"], "Id": materiales.json()["Id"]})
+        aux.append({"Nombre": materiales.json()["Material"],"Cantidad": materiales.json()["Cantidad"], "Id": materiales.json()["Id"],"Estado": materiales.json()["Estado"]})
         i = i + 1
-    return render_template("collection/detalle.html",collection = coleccion) 
+        print(aux)
+    return render_template("collection/detalle.html",collection = coleccion,reservas=aux) 
+
+@login_required
+def newReasingarfecha(idreserva):
+    form = Form_Date_new()
+    return render_template("collection/newDate.html",form=form,idreserva=idreserva) 
+
+@login_required
+def reasignarFecha(idreserva):
+    #//
+    form = Form_Date_new()
+    if(form.validate_on_submit()):
+        fecha = request.form.get("fecha")
+        aux={"fecha": fecha}
+        requests.post("https://dssdapi.fly.dev/api/cambiarm/"+str(idreserva)+"/",aux)
+        idcoleccion = ReservaMateriales.query.filter_by(idreserva=idreserva).first().idcoleccion
+        cookie = session.get("cookie")
+        js = session.get("js")
+        aux = "bonita.tenant=1; BOS_Locale=es; JSESSIONID="+js+"; X-Bonita-API-Token="+cookie
+        headers = {'Cookie': aux, "X-Bonita-API-Token": cookie}
+        caseId=Collection.getCaseid(idcoleccion)
+        response3 = requests.put(url="http://localhost:8080/bonita/API/bpm/caseVariable/"+str(caseId)+"/incumplimientoFechas",json={"type":"java.lang.Boolean", "value": "false"},headers=headers)
+        response2 = requests.get(url="http://localhost:8080/bonita/API/bpm/humanTask?c=10&p=0&f=caseId%3D"+str(caseId)+"",headers=headers)
+        taskId = response2.json()[0]["id"]
+        response2 = requests.put(url="http://localhost:8080/bonita/API/bpm/userTask/"+taskId+"",json={"assigned_id":"18"},headers=headers)
+        response2 = requests.post(url="http://localhost:8080/bonita/API/bpm/userTask/"+taskId+"/execution",headers=headers)
+        return redirect(url_for("collection_index"))
+    return render_template("collection/newDate.html",form=form,idreserva=idreserva) 

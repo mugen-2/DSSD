@@ -31,7 +31,11 @@ def index(idcoleccion):
 
     response = requests.get("https://dssdapi.fly.dev/api/listarf/")
     espaciosFabricacion = response.json()["fabricantes"][0]
-    return render_template("espacioFabricacion/index.html",espaciosFabricacion=espaciosFabricacion, idcoleccion=idcoleccion)
+    espacio = EspacioFabricacion.tieneEspacioFabricacion(idcoleccion)
+    notiene=True
+    if espacio:
+        notiene = False
+    return render_template("espacioFabricacion/index.html",espaciosFabricacion=espaciosFabricacion, idcoleccion=idcoleccion, notiene=notiene)
 
 def new(idcoleccion, idfabricante):
     form = Form_espacioFabricacion_new()
