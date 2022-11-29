@@ -31,3 +31,9 @@ class Collection(db.Model, UserMixin):
         col= Collection.query.filter_by(id=collection_id).first()
         col.caseId= caseId
         db.session.commit()
+    
+    def getCaseid(id):
+        return Collection.query.filter_by(id=id).first().caseId
+    
+    def detalle(id):
+        return Collection.query.filter_by(id=id).first()

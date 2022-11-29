@@ -8,10 +8,9 @@
 {% block content %}
   <h1>Materiales</h1>
 
-  {% for materiales in reservaMateriales.items %}
+  {% for material in reservaMateriales %}
   <li>
-    {{ materiales.nombre }} 
-    {{ materiales.cantidad }} 
+    {{ material["Cantidad"] }} toneladas de {{ material["Nombre"] }} 
   </li> 
   {% endfor %}
   <a href="{{ url_for('listarMateriales', idcoleccion = idcoleccion) }}" class="link">Consultar API</a>
@@ -22,19 +21,7 @@
   {% if reservaMateriales.has_prev %}
   <a class= "link " href="{{url_for('reservaMateriales_index',page=materiales.prev_num, idcoleccion = idcoleccion) }}" >Anterior</a>
   {% endif %}
-  {% for page_num in reservaMateriales.iter_pages()%}
-  {% if page_num %}
-    {% if reservaMateriales.page == page_num %}
-
-    <a class= "btn btn-info" href="{{url_for('reservaMateriales_index',page=page_num, idcoleccion = idcoleccion) }}">{{page_num}} </a>
-
-    {% else %}
-
-    <a class= "link" href="{{url_for('reservaMateriales_index',page=page_num, idcoleccion = idcoleccion) }}">{{page_num}} </a>
-
-    {% endif %} 
-    {% else %} ... {% endif %} 
-  {% endfor %}
+  
   {% if reservaMateriales.has_next %}
   <a class= "link " href="{{url_for('reservaMateriales_index',page=reservaMateriales.next_num, idcoleccion = idcoleccion) }}" >Siguiente</a>
   {% endif %}

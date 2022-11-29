@@ -13,9 +13,15 @@
     {{ collection.nombre }}  
     <a href="{{ url_for('reservaMateriales_index', idcoleccion = collection.id) }}" class="link">Reservar materiales</a>
     <a href="{{ url_for('planComercial_new', idcoleccion = collection.id) }}" class="link">Plan comercial</a>
+    {% if 'Operador' in rol %}
+    <a href="{{ url_for('reservaMateriales_index', idcoleccion = collection.id) }}" class="link">Reservar materiales</a><br>
+    {% endif %}
+    <a href="{{ url_for('collection_detalle', idcoleccion = collection.id )}}" class="link">Detalle</a>
   </li> 
   {% endfor %}
+  {% if 'Diseñador' in rol %}
   <a href="{{ url_for('collection_new') }}" class="link">Nueva</a>
+  {% endif %}
   <br>
   
   

@@ -1,7 +1,7 @@
 from os import path, environ, urandom
 from flask import Flask, render_template, g, Blueprint, session
 from flask_session import Session
-from flask_login import LoginManager
+from flask_login import LoginManager,current_user
 from config import config
 from app import db
 from app.models.user import User
@@ -63,6 +63,10 @@ def create_app(environment="development"):
     app.add_url_rule("/colecciones", "collection_index", collection.index)
     app.add_url_rule("/colecciones", "collection_create", collection.create, methods=["POST"])
     app.add_url_rule("/colecciones/nuevo", "collection_new", collection.new)
+    app.add_url_rule("/colecciones/detalle/<idcoleccion>", "collection_detalle", collection.detalle)
+    app.add_url_rule("/colecciones/<idreserva>", "collection_new_reasignar", collection.newReasingarfecha)
+    app.add_url_rule("/colecciones/reasignar/<idreserva>", "collection_reasignar", collection.reasignarFecha,methods=["POST"])
+    
 
     # Rutas Reserva Materiales
     app.add_url_rule("/reservaMateriales/<idcoleccion>", "reservaMateriales_index", reservaMateriales.index)
@@ -82,7 +86,10 @@ def create_app(environment="development"):
     # Ruta para el Home (usando decorator)
     @app.route("/")
     def home():
-        rol= session["rol"]
+        if 'rol' in session.keys():
+            rol= session["rol"]
+        else:
+            rol= ""
         #print(rol)
         return render_template("home.html",rol=rol)
 

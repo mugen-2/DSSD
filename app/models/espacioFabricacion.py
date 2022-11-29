@@ -20,3 +20,6 @@ class EspacioFabricacion(db.Model, UserMixin):
         espacioFabricacion = EspacioFabricacion(idreserva,idcoleccion)
         db.session.add(espacioFabricacion)
         db.session.commit()
+
+    def tieneEspacioFabricacion(idC):
+        return EspacioFabricacion.query.filter_by(idcoleccion=idC).first()

@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+{% block title %}Colecciones{% endblock %}
+
+{% block head %}
+  {{ super() }} 
+{% endblock %}
+
+{% block content %}
+  <h1>Coleccion {{ collection.nombre }}</h1>
+
+  {% for reserva in reservas %}
+    <li>
+      
+      Reserva: {{ reserva["Nombre"] }}
+      {% if reserva["Estado"] == "retrasado"%}
+        
+        <a href="{{ url_for('collection_new_reasignar', idreserva = reserva['Id'] ) }}" class="link">Re-asignar fechas</a>
+      {% endif %}
+    </li> 
+  {% endfor %}
+  <a href="{{ url_for('home') }}" class="link">Volver</a>
+{% endblock %}
