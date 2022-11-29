@@ -34,5 +34,5 @@ def create(idcoleccion, lotes, fechaDeSalida):
         #idreserva = requests.post("https://dssdapi.fly.dev/api/reserva/", reserva)
         PlanComercial.crear(idcoleccion, lotes, fechaDeSalida)
 
-        return redirect(url_for("reservaMateriales_index", idcoleccion = idcoleccion))
-    return render_template("reservaMateriales/new.html", form=form, idcoleccion=idcoleccion, idmaterial=idmaterial)      
+        return redirect(url_for("collection_index"))
+    return render_template("planComercial/new.html", form=form, idcoleccion=idcoleccion)      
