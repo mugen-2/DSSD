@@ -5,7 +5,7 @@ from flask_login import LoginManager,current_user
 from config import config
 from app import db
 from app.models.user import User
-from app.resources import user, collection, auth, reservaMateriales, espacioFabricacion, planComercial
+from app.resources import user, collection, auth, reservaMateriales, espacioFabricacion, planComercial,metricas
 #from app.resources import auth
 from app.helpers import handler
 from app.helpers import auth as helper_auth
@@ -67,6 +67,9 @@ def create_app(environment="development"):
     app.add_url_rule("/colecciones/<idreserva>", "collection_new_reasignar", collection.newReasingarfecha)
     app.add_url_rule("/colecciones/reasignar/<idreserva>", "collection_reasignar", collection.reasignarFecha,methods=["POST"])
     
+    #Rutas Metricas
+    app.add_url_rule("/metricas", "metricas_index", metricas.index)
+    app.add_url_rule("/metricas/crm", "cantResxMaterial", metricas.cantResxMaterial)
 
     # Rutas Reserva Materiales
     app.add_url_rule("/reservaMateriales/<idcoleccion>", "reservaMateriales_index", reservaMateriales.index)

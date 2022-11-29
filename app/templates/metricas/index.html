@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+{% block title %}Colecciones{% endblock %}
+
+{% block head %}
+  {{ super() }} 
+{% endblock %}
+
+{% block content %}
+  <h1>Metricas</h1>
+
+  <a href="{{ url_for('cantResxMaterial')}}" class="link">Cantidad de materiales por reserva</a>
+
+  
+  
+
+
+  <br>
+  <a href="{{ url_for('home') }}" class="link">Volver</a>
+{% endblock %}

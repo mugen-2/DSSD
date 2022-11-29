@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+{% block title %}Colecciones{% endblock %}
+
+{% block head %}
+  {{ super() }} 
+{% endblock %}
+
+{% block content %}
+  <h1>Cantidad de reservas por material</h1>
+    {% for a in list %}
+        {{a["Nombre"]}}: {{a["Cantidad"]}}
+        <br>
+    {% endfor %}
+
+  <br>
+  <a href="{{ url_for('metricas_index') }}" class="link">Volver</a>
+{% endblock %}

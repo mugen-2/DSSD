@@ -10,6 +10,8 @@
       <a href="{{ url_for('collection_index') }}" class="link"> Colecciones </a>
     
     <a href="{{ url_for('user_index') }}" class="link"> Usuarios </a>
+
+    <a href="{{ url_for('metricas_index') }}" class="link"> Metricas </a>
   {% else %}
     <a href="{{ url_for('auth_login') }}" class="link">Iniciar sesión</a>
   {% endif %}
