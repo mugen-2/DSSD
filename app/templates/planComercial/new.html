@@ -1,0 +1,31 @@
+{% extends "layout.html" %}
+{% block title %}Plan Comercial{% endblock %}
+{% block head %}
+  {{ super() }}
+{% endblock %}
+{% block content %}
+  <h1>Crear un plan comercial </h1>
+  <form class="form-control" action="{{ url_for('planComercial_create', idcoleccion = idcoleccion) }}" method="POST" novalidate>
+    {{form.hidden_tag()}}
+
+    <label for="fechaDeSalida">Fecha de salida</label>
+    {{form.fechaDeSalida}}
+    {% for error in form.fechaDeSalida.errors %}
+    <span style="color:red;" >{{error}}</span>
+    {% endfor %}
+    <br>
+
+    <label for="lotes">Cantidad de lotes</label>
+    {{form.lotes}}
+    {% for error in form.lotes.errors %}
+    <span style="color:red;" >{{error}}</span>
+    {% endfor %}
+    <br>
+    
+    <p>
+      <input type="submit" value="Crear">
+      <button type="reset">Limpiar</button>
+    </p>
+  </form>
+  <a href="{{ url_for('espacioFabricacion_index', idcoleccion = idcoleccion) }}" class="link">Volver</a>
+{% endblock %}
