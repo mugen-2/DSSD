@@ -22,5 +22,8 @@
       {% endif %}
     </li> 
   {% endfor %}
+  {% if fabricacion%}
+    <a href="{{ url_for('verificarFabricacion', idcoleccion = collection.id ) }}" class="link">Fabricacion</a>
+  {% endif %}
   <a href="{{ url_for('home') }}" class="link">Volver</a>
 {% endblock %}

@@ -13,6 +13,7 @@ from app.helpers.auth import authorized
 from flask_login import login_required,current_user
 from app.models.collection import Collection
 from app.models.reservaMateriales import ReservaMateriales
+from app.models.espacioFabricacion import EspacioFabricacion
 import requests
 import json
 
@@ -82,6 +83,19 @@ def detalle(idcoleccion):
             response2 = requests.put(url="http://localhost:8080/bonita/API/bpm/userTask/"+taskId+"",json={"assigned_id":"18"},headers=headers)
             response2 = requests.post(url="http://localhost:8080/bonita/API/bpm/userTask/"+taskId+"/execution",headers=headers)
     
+    response = requests.get(url="http://localhost:8080/bonita/API/bpm/task/?s=Comprobar si se completaron todas las etapas",headers=headers).json()
+    for instancia in response:
+        if int(instancia["caseId"]) == int(caseId) and instancia["displayName"] == "Comprobar si se completaron todas las etapas":
+            print("Entro en el if")
+            if EspacioFabricacion.query.filter_by(idcoleccion = idcoleccion).first().estado == "si":
+                response3 = requests.put(url="http://localhost:8080/bonita/API/bpm/caseVariable/"+str(caseId)+"/finalizacionEtapasF",json={"type":"java.lang.Boolean", "value": "true"},headers=headers)
+                flash("SAAAAAAAAAAAAAPPPPEEEEEEEEEEEE")
+            response2 = requests.get(url="http://localhost:8080/bonita/API/bpm/humanTask?c=10&p=0&f=caseId%3D"+str(caseId)+"",headers=headers)
+            taskId = response2.json()[0]["id"]
+            response2 = requests.put(url="http://localhost:8080/bonita/API/bpm/userTask/"+taskId+"",json={"assigned_id":"18"},headers=headers)
+            response2 = requests.post(url="http://localhost:8080/bonita/API/bpm/userTask/"+taskId+"/execution",headers=headers)
+    
+    
     reservaMateriales = ReservaMateriales.query.filter_by(idcoleccion = idcoleccion).all() #id de todas las reservas para esa coleccion
     i = 0
     aux = [] #Json con todos los materiales
@@ -89,7 +103,7 @@ def detalle(idcoleccion):
         materiales = requests.get("https://dssdapi.fly.dev/api/listarr/" + str(reservaMateriales[i].idreserva))
         aux.append({"Nombre": materiales.json()["Material"],"Cantidad": materiales.json()["Cantidad"], "Id": materiales.json()["Id"],"Estado": materiales.json()["Estado"], "Estado en BD": reservaMateriales[i].estado})
         i = i + 1
-    return render_template("collection/detalle.html",collection = coleccion,reservas=aux) 
+    return render_template("collection/detalle.html",collection = coleccion, reservas=aux, fabricacion = ReservaMateriales.terminaronTodasReservas(idcoleccion)) 
 
 @login_required
 def newReasingarfecha(idreserva):

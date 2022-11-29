@@ -11,10 +11,12 @@ class EspacioFabricacion(db.Model, UserMixin):
     id = Column(Integer,primary_key=True)
     idcoleccion = Column(Integer)
     idreserva = Column(Integer)
+    estado = Column(String(100))
 
     def __init__(self, idreserva = idreserva, idcoleccion=idcoleccion):
         self.idreserva = idreserva
         self.idcoleccion = idcoleccion
+        self.estado = "no"
 
     def crear(idreserva, idcoleccion):
         espacioFabricacion = EspacioFabricacion(idreserva,idcoleccion)
@@ -23,3 +25,8 @@ class EspacioFabricacion(db.Model, UserMixin):
 
     def tieneEspacioFabricacion(idC):
         return EspacioFabricacion.query.filter_by(idcoleccion=idC).first()
+    
+    def entregado(idreserva):
+        reserva = EspacioFabricacion.query.filter_by(idreserva=idreserva).first()
+        reserva.estado = "si"
+        db.session.commit()

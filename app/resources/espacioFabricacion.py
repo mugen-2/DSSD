@@ -82,3 +82,34 @@ def create(idcoleccion, idfabricante):
         else:
             print("Imposible maestro")
     return render_template("espacioFabricacion/new.html", form=form, idcoleccion=idcoleccion, idfabricante=idfabricante) 
+
+def verificar(idcoleccion):
+    print("----------------------------------")
+    reserva = EspacioFabricacion.query.filter_by(idcoleccion=idcoleccion).first()
+    idcoleccion = reserva.idcoleccion
+    caseId = Collection.detalle(idcoleccion).caseId
+    cookie = session.get("cookie")
+    js = session.get("js")
+    aux = "bonita.tenant=1; BOS_Locale=es; JSESSIONID="+js+"; X-Bonita-API-Token="+cookie
+    headers = {'Cookie': aux, "X-Bonita-API-Token": cookie}
+    #Consulta por etapas de fabricacion
+    response = requests.get(url="http://localhost:8080/bonita/API/bpm/task/?s=Comprobar estado de fabricación",headers=headers).json()
+    for instancia in response:
+        if int(instancia["caseId"]) == int(caseId) and instancia["displayName"] == "Comprobar estado de fabricación":
+            x = {'reserva': reserva.idreserva}
+            response2 = requests.post("https://dssdapi.fly.dev/api/buscarhf/",x).json()
+            descripcionDeHito = response2['Descripcion']
+            print(descripcionDeHito)
+            if descripcionDeHito != "No se registra ningun hito":
+                response3 = requests.put(url="http://localhost:8080/bonita/API/bpm/caseVariable/"+str(caseId)+"/etapaFabricacion",json={"type":"java.lang.Boolean", "value": "true"},headers=headers)
+                flash("La fabricacion ha cumplido el siguiente hito: "+ descripcionDeHito)
+            else:
+                response3 = requests.put(url="http://localhost:8080/bonita/API/bpm/caseVariable/"+str(caseId)+"/etapaFabricacion",json={"type":"java.lang.Boolean", "value": "false"},headers=headers)
+            response2 = requests.get(url="http://localhost:8080/bonita/API/bpm/humanTask?c=10&p=0&f=caseId%3D"+str(caseId)+"",headers=headers)
+            taskId = response2.json()[0]["id"]
+            response2 = requests.put(url="http://localhost:8080/bonita/API/bpm/userTask/"+taskId+"",json={"assigned_id":"18"},headers=headers)
+            response2 = requests.post(url="http://localhost:8080/bonita/API/bpm/userTask/"+taskId+"/execution",headers=headers)
+            if descripcionDeHito == "Entrega terminada":
+                EspacioFabricacion.entregado(reserva.idreserva)
+                    
+    return redirect(url_for("collection_detalle", idcoleccion = idcoleccion))
