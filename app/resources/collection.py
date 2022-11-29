@@ -69,56 +69,14 @@ def detalle(idcoleccion):
     js = session.get("js")
     aux = "bonita.tenant=1; BOS_Locale=es; JSESSIONID="+js+"; X-Bonita-API-Token="+cookie
     headers = {'Cookie': aux, "X-Bonita-API-Token": cookie}
-    #Consulta para consultar fechas
-    response = requests.get(url="http://localhost:8080/bonita/API/bpm/task/?s=Consultar fechas con proveedor",headers=headers).json()
-    for instancia in response:
-        if int(instancia["caseId"]) == int(caseId) and instancia["displayName"] == "Consultar fechas con proveedor":
-            parche = True
-            for reserva in reservas:
-                if parche:
-                    response2 = requests.get("https://dssdapi.fly.dev/api/listarr/"+str(reserva.idreserva)+"/").json()
-                    if response2['Estado'] == "retrasado":
-                        response3 = requests.put(url="http://localhost:8080/bonita/API/bpm/caseVariable/"+str(caseId)+"/incumplimientoFechas",json={"type":"java.lang.Boolean", "value": "true"},headers=headers)
-                        flash("El material "+response2['Material']+" ha sido retrasado y debe de reestructurar la fecha de entrega")
-                        #Se puede cambiar el estado en la bd a retrasado para que sea mas facil chequear si mostramos el boton
-                    response2 = requests.get(url="http://localhost:8080/bonita/API/bpm/humanTask?c=10&p=0&f=caseId%3D"+str(caseId)+"",headers=headers)
-                    taskId = response2.json()[0]["id"]
-                    response2 = requests.put(url="http://localhost:8080/bonita/API/bpm/userTask/"+taskId+"",json={"assigned_id":"18"},headers=headers)
-                    response2 = requests.post(url="http://localhost:8080/bonita/API/bpm/userTask/"+taskId+"/execution",headers=headers)
-                    parche = False
-    #Consulta para hitos
-    response = requests.get(url="http://localhost:8080/bonita/API/bpm/task/?s=Comprobar cumplimiento de hito de obtencion de materiales",headers=headers).json()
-    print(response)
-    for instancia in response:
-        if int(instancia["caseId"]) == int(caseId) and instancia["displayName"] == "Comprobar cumplimiento de hito de obtencion de materiales":
-            parche = True
-            for reserva in reservas:
-                if parche:
-                    x = {'reserva': reserva.idreserva}
-                    response2 = requests.post("https://dssdapi.fly.dev/api/buscarhm/",x).json()
-                    descripcionDeHito = response2['Descripcion']
-                    if descripcionDeHito != "No se registra ningun hito":
-                        print("entro en el if")
-                        response3 = requests.put(url="http://localhost:8080/bonita/API/bpm/caseVariable/"+str(caseId)+"/hito",json={"type":"java.lang.Boolean", "value": "true"},headers=headers)
-                        flash("El material x por ahora, ha cumplido el siguiente hito: "+ descripcionDeHito)
-                        parche = False
-                    else:
-                        response3 = requests.put(url="http://localhost:8080/bonita/API/bpm/caseVariable/"+str(caseId)+"/hito",json={"type":"java.lang.Boolean", "value": "false"},headers=headers)
-                    response2 = requests.get(url="http://localhost:8080/bonita/API/bpm/humanTask?c=10&p=0&f=caseId%3D"+str(caseId)+"",headers=headers)
-                    taskId = response2.json()[0]["id"]
-                    response2 = requests.put(url="http://localhost:8080/bonita/API/bpm/userTask/"+taskId+"",json={"assigned_id":"18"},headers=headers)
-                    response2 = requests.post(url="http://localhost:8080/bonita/API/bpm/userTask/"+taskId+"/execution",headers=headers)
-                    if not parche and descripcionDeHito == "Se termino la etapa":
-                        ReservaMateriales.entregado(reserva.idreserva)
+
     #Consulta para ver si se termino todo
     response = requests.get(url="http://localhost:8080/bonita/API/bpm/task/?s=Comprobar entrega de materiales",headers=headers).json()
-    print(response)
     for instancia in response:
         if int(instancia["caseId"]) == int(caseId) and instancia["displayName"] == "Comprobar entrega de materiales":
             print("Entro en el if")
             if ReservaMateriales.terminaronTodasReservas(idcoleccion):
                 response3 = requests.put(url="http://localhost:8080/bonita/API/bpm/caseVariable/"+str(caseId)+"/entregaMateriales",json={"type":"java.lang.Boolean", "value": "true"},headers=headers)
-                print("Esta todo listorti")
             response2 = requests.get(url="http://localhost:8080/bonita/API/bpm/humanTask?c=10&p=0&f=caseId%3D"+str(caseId)+"",headers=headers)
             taskId = response2.json()[0]["id"]
             response2 = requests.put(url="http://localhost:8080/bonita/API/bpm/userTask/"+taskId+"",json={"assigned_id":"18"},headers=headers)
@@ -129,9 +87,8 @@ def detalle(idcoleccion):
     aux = [] #Json con todos los materiales
     while i < len(reservaMateriales):
         materiales = requests.get("https://dssdapi.fly.dev/api/listarr/" + str(reservaMateriales[i].idreserva))
-        aux.append({"Nombre": materiales.json()["Material"],"Cantidad": materiales.json()["Cantidad"], "Id": materiales.json()["Id"],"Estado": materiales.json()["Estado"]})
+        aux.append({"Nombre": materiales.json()["Material"],"Cantidad": materiales.json()["Cantidad"], "Id": materiales.json()["Id"],"Estado": materiales.json()["Estado"], "Estado en BD": reservaMateriales[i].estado})
         i = i + 1
-        print(aux)
     return render_template("collection/detalle.html",collection = coleccion,reservas=aux) 
 
 @login_required

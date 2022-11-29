@@ -11,10 +11,14 @@
   {% for reserva in reservas %}
     <li>
       
-      Reserva: {{ reserva["Nombre"] }}
+      Reserva: {{ reserva["Nombre"] }}, {{ reserva["Id"] }}
       {% if reserva["Estado"] == "retrasado"%}
         
         <a href="{{ url_for('collection_new_reasignar', idreserva = reserva['Id'] ) }}" class="link">Re-asignar fechas</a>
+      {% endif %}
+      {% if reserva["Estado en BD"] == "no"%}
+        
+      <a href="{{ url_for('verificarReservaMateriales', idreserva = reserva['Id'] ) }}" class="link">Verificar</a>
       {% endif %}
     </li> 
   {% endfor %}

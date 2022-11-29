@@ -72,6 +72,7 @@ def create_app(environment="development"):
     app.add_url_rule("/reservaMateriales/<idcoleccion>", "reservaMateriales_index", reservaMateriales.index)
     app.add_url_rule("/reservaMateriales/listarMateriales/<idcoleccion>", "listarMateriales", reservaMateriales.list)
     app.add_url_rule("/reservaMateriales/nuevo/<idcoleccion>/<idmaterial>", "reservaMateriales_new", reservaMateriales.new)
+    app.add_url_rule("/reservaMateriales/verificar/<idreserva>", "verificarReservaMateriales", reservaMateriales.verificar)
     app.add_url_rule("/reservaMateriales/<idcoleccion>/<idmaterial>", "reservaMateriales_create", reservaMateriales.create, methods=["POST"])
 
     # Rutas Espacios de Fabricación
