@@ -11,28 +11,30 @@ from app.db import db
 from app.helpers.auth import authorized
 from flask_login import login_required,current_user
 from app.models.planComercial import PlanComercial
+from app.models.ordenCompra import OrdenCompra
 import requests
 import json
+import random
 
-def new(idcoleccion, lotes, fechaDeSalida):
+def new(idcoleccion):
     form = Form_planComercial_new()
-    return render_template("planComercial/new.html", form=form, idcoleccion=idcoleccion, lotes=lotes, fechaDeSalida=fechaDeSalida) 
+    return render_template("planComercial/new.html", form=form, idcoleccion=idcoleccion) 
 
-def create(idcoleccion, lotes, fechaDeSalida):
+def create(idcoleccion):
     form = Form_planComercial_new()    
     if (form.validate_on_submit()):
         fechaDeSalida = request.form.get("fechaDeSalida")
         lotes = request.form.get("lotes")
         lotes = int(lotes)
 
-        #nombre = "nestor"
-        #contra = "123"
-        #usuario = {'nombre': nombre, 'contra': contra}
-        #cookie = requests.post("https://dssdapi.fly.dev/api/log/", usuario)
+        ordenes = random.randint(1, lotes)
 
-        #reserva = {'idcoleccion': idcoleccion, 'lotes': lotes, 'fechaDeSalida': fechaDeSalida}
-        #idreserva = requests.post("https://dssdapi.fly.dev/api/reserva/", reserva)
-        PlanComercial.crear(idcoleccion, lotes, fechaDeSalida)
+        idplancomercial = PlanComercial.crear(idcoleccion, lotes, fechaDeSalida)
+
+        for i in range(ordenes):
+            orden = random.randint(1000000000, 9999999999)
+            OrdenCompra.crear(idplancomercial, orden)
+        
 
         return redirect(url_for("collection_index"))
     return render_template("planComercial/new.html", form=form, idcoleccion=idcoleccion)      

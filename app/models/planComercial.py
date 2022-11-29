@@ -22,3 +22,4 @@ class PlanComercial(db.Model, UserMixin):
         planComercial = PlanComercial(idcoleccion, lotes, fechaDeSalida)
         db.session.add(planComercial)
         db.session.commit()
+        return planComercial.id
