@@ -11,7 +11,6 @@
   {% for collection in collections.items %}
   <li>
     {{ collection.nombre }}  
-    <a href="{{ url_for('reservaMateriales_index', idcoleccion = collection.id) }}" class="link">Reservar materiales</a>
     <a href="{{ url_for('planComercial_new', idcoleccion = collection.id) }}" class="link">Plan comercial</a>
     {% if 'Operador' in rol %}
     <a href="{{ url_for('reservaMateriales_index', idcoleccion = collection.id) }}" class="link">Reservar materiales</a><br>
