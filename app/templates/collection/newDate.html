@@ -14,6 +14,13 @@
     <span style="color:red;" >{{error}}</span>
     {% endfor %}
     <br>
+
+    <label for="fecha">Fecha2</label>
+    {{form.fecha2}}
+    {% for error in form.fecha2.errors %}
+    <span style="color:red;" >{{error}}</span>
+    {% endfor %}
+    <br>
     
     <p>
       <input type="submit" value="Crear">

@@ -103,7 +103,15 @@ def detalle(idcoleccion):
         materiales = requests.get("https://dssdapi.fly.dev/api/listarr/" + str(reservaMateriales[i].idreserva))
         aux.append({"Nombre": materiales.json()["Material"],"Cantidad": materiales.json()["Cantidad"], "Id": materiales.json()["Id"],"Estado": materiales.json()["Estado"], "Estado en BD": reservaMateriales[i].estado})
         i = i + 1
-    return render_template("collection/detalle.html",collection = coleccion, reservas=aux, fabricacion = ReservaMateriales.terminaronTodasReservas(idcoleccion)) 
+
+    reasignar = False
+    response = requests.get(url="http://localhost:8080/bonita/API/bpm/task/?s=Re-asignar fechas con fabricantes",headers=headers).json()
+    for instancia in response:
+        if int(instancia["caseId"]) == int(caseId) and instancia["displayName"] == "Re-asignar fechas con fabricantes":
+            reasignar = True
+    print(reasignar)
+    print(aux)
+    return render_template("collection/detalle.html",collection = coleccion, reservas=aux, fabricacion = ReservaMateriales.terminaronTodasReservas(idcoleccion), reasignar=reasignar) 
 
 @login_required
 def newReasingarfecha(idreserva):
@@ -115,19 +123,29 @@ def reasignarFecha(idreserva):
     #//
     form = Form_Date_new()
     if(form.validate_on_submit()):
+        reserva = ReservaMateriales.query.filter_by(idreserva=idreserva).first()
+        idFabricacion = EspacioFabricacion.query.filter_by(idcoleccion=reserva.idcoleccion).first().idreserva
+        print(idFabricacion)
+
         fecha = request.form.get("fecha")
-        aux={"fecha": fecha}
-        requests.post("https://dssdapi.fly.dev/api/cambiarm/"+str(idreserva)+"/",aux)
-        idcoleccion = ReservaMateriales.query.filter_by(idreserva=idreserva).first().idcoleccion
-        cookie = session.get("cookie")
-        js = session.get("js")
-        aux = "bonita.tenant=1; BOS_Locale=es; JSESSIONID="+js+"; X-Bonita-API-Token="+cookie
-        headers = {'Cookie': aux, "X-Bonita-API-Token": cookie}
-        caseId=Collection.getCaseid(idcoleccion)
-        response3 = requests.put(url="http://localhost:8080/bonita/API/bpm/caseVariable/"+str(caseId)+"/incumplimientoFechas",json={"type":"java.lang.Boolean", "value": "false"},headers=headers)
-        response2 = requests.get(url="http://localhost:8080/bonita/API/bpm/humanTask?c=10&p=0&f=caseId%3D"+str(caseId)+"",headers=headers)
-        taskId = response2.json()[0]["id"]
-        response2 = requests.put(url="http://localhost:8080/bonita/API/bpm/userTask/"+taskId+"",json={"assigned_id":"18"},headers=headers)
-        response2 = requests.post(url="http://localhost:8080/bonita/API/bpm/userTask/"+taskId+"/execution",headers=headers)
-        return redirect(url_for("collection_index"))
+        fecha2 = request.form.get("fecha2")
+        aux = {"fecha1": fecha, "fecha2": fecha2}
+        idreserva1 = requests.post("https://dssdapi.fly.dev/api/cambiarf/"+str(idFabricacion)+"/",aux).json()
+        if idreserva1["ReservaFabricacion"] != "No se puede reservar para dicho peirodo de tiempo":
+            aux = {"id":idreserva}
+            requests.post("https://dssdapi.fly.dev/api/riniciar/",aux)
+            idcoleccion = ReservaMateriales.query.filter_by(idreserva=idreserva).first().idcoleccion
+            cookie = session.get("cookie")
+            js = session.get("js")
+            aux = "bonita.tenant=1; BOS_Locale=es; JSESSIONID="+js+"; X-Bonita-API-Token="+cookie
+            headers = {'Cookie': aux, "X-Bonita-API-Token": cookie}
+            caseId=Collection.getCaseid(idcoleccion)
+            response3 = requests.put(url="http://localhost:8080/bonita/API/bpm/caseVariable/"+str(caseId)+"/incumplimientoFechas",json={"type":"java.lang.Boolean", "value": "false"},headers=headers)
+            response2 = requests.get(url="http://localhost:8080/bonita/API/bpm/humanTask?c=10&p=0&f=caseId%3D"+str(caseId)+"",headers=headers)
+            taskId = response2.json()[0]["id"]
+            response2 = requests.put(url="http://localhost:8080/bonita/API/bpm/userTask/"+taskId+"",json={"assigned_id":"18"},headers=headers)
+            response2 = requests.post(url="http://localhost:8080/bonita/API/bpm/userTask/"+taskId+"/execution",headers=headers)
+            return redirect(url_for("collection_index"))
+        else:
+            flash("No se puede reservar en ese periodo de fechas")
     return render_template("collection/newDate.html",form=form,idreserva=idreserva) 
