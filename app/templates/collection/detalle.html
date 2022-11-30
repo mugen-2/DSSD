@@ -12,7 +12,7 @@
     <li>
       
       Reserva: {{ reserva["Nombre"] }}, {{ reserva["Id"] }}
-      {% if reserva["Estado"] == "retrasado"%}
+      {% if (reserva["Estado"] == "retrasado") and reasignar %}
         
         <a href="{{ url_for('collection_new_reasignar', idreserva = reserva['Id'] ) }}" class="link">Re-asignar fechas</a>
       {% endif %}

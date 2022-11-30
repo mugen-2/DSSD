@@ -12,7 +12,14 @@
   <li>
     {{ collection.nombre }}  
     {% if 'Comercial' in rol %}
-    <a href="{{ url_for('planComercial_new', idcoleccion = collection.id) }}" class="link">Plan comercial</a>
+      {% for json in aux %}
+        {% if json["Id"] == collection.id and json["TienePlan"] == False %}
+          <a href="{{ url_for('planComercial_new', idcoleccion = collection.id) }}" class="link">Plan comercial</a>
+        {% endif %}
+        {% if json["Id"] == collection.id and json["TienePlan"] %}
+          <a href="{{ url_for('verificarLlegadaDeLotes', idcoleccion = collection.id) }}" class="link">Verificar Llegada de Lotes</a>
+        {% endif %}
+      {% endfor %}
     {% endif %}
     {% if 'Operador' in rol %}
     <a href="{{ url_for('reservaMateriales_index', idcoleccion = collection.id) }}" class="link">Reservar materiales</a><br>

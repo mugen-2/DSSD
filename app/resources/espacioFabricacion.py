@@ -67,7 +67,7 @@ def create(idcoleccion, idfabricante):
             for instancia in response:
                 if int(instancia["caseId"]) == int(caseId) and instancia["displayName"] == "Reserva de espacio de fabricacion":
                     response = requests.get(url="https://dssdapi.fly.dev/api/listarf/"+str(idfabricante)+"/").json()
-                    if(response["Codigo"]!=54): #Falta poder chequear el codigo de un fabricante en particular
+                    if(response["Codigo"]!=54): 
                         response = requests.put(url="http://localhost:8080/bonita/API/bpm/caseVariable/"+str(caseId)+"/hayQueImportar",json={"type":"java.lang.Boolean", "value": "true"},headers=headers)
                         print(response)
                     response2 = requests.get(url="http://localhost:8080/bonita/API/bpm/humanTask?c=10&p=0&f=caseId%3D"+str(caseId)+"",headers=headers)

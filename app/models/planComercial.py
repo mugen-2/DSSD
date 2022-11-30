@@ -23,3 +23,9 @@ class PlanComercial(db.Model, UserMixin):
         db.session.add(planComercial)
         db.session.commit()
         return planComercial.id
+    
+    def existe(idcoleccion):
+        if PlanComercial.query.filter_by(idcoleccion=idcoleccion).first():
+            return False
+        else:
+            return True
