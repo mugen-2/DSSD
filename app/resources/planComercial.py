@@ -12,6 +12,8 @@ from app.helpers.auth import authorized
 from flask_login import login_required,current_user
 from app.models.planComercial import PlanComercial
 from app.models.ordenCompra import OrdenCompra
+from app.models.collection import Collection
+from app.resources.auth import getUserBID
 import requests
 import json
 import random
@@ -23,6 +25,20 @@ def new(idcoleccion):
 def create(idcoleccion):
     form = Form_planComercial_new()    
     if (form.validate_on_submit()):
+        caseId = Collection.getCaseid(idcoleccion)
+        cookie = session.get("cookie")
+        js = session.get("js")
+        aux = "bonita.tenant=1; BOS_Locale=es; JSESSIONID="+js+"; X-Bonita-API-Token="+cookie
+        headers = {'Cookie': aux, "X-Bonita-API-Token": cookie}
+        response = requests.get(url="http://localhost:8080/bonita/API/bpm/task/?s=Diseñar plan comercial",headers=headers).json()
+        for instancia in response:
+            if int(instancia["caseId"]) == int(caseId) and instancia["displayName"] == "Diseñar plan comercial":
+                response2 = requests.get(url="http://localhost:8080/bonita/API/bpm/humanTask?c=10&p=0&f=caseId%3D"+str(caseId)+"",headers=headers)
+                taskId = response2.json()[0]["id"]
+                response3 = requests.get("http://localhost:8080/bonita/API/system/session/unusedid",headers=headers) 
+                userBId = response3.json()["user_id"]
+                response2 = requests.put(url="http://localhost:8080/bonita/API/bpm/userTask/"+taskId+"",json={"assigned_id":userBId},headers=headers)
+                response2 = requests.post(url="http://localhost:8080/bonita/API/bpm/userTask/"+taskId+"/execution",headers=headers)
         fechaDeSalida = request.form.get("fechaDeSalida")
         lotes = request.form.get("lotes")
         lotes = int(lotes)
