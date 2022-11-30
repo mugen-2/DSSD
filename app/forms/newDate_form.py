@@ -11,4 +11,7 @@ class Form_Date_new(FlaskForm):
 
     fecha = DateField('fecha', 
         validators=[DataRequired( message = "el campo es obligatorio (yyyy-m-d)")])
+
+    fecha2 = DateField('fecha2', 
+        validators=[DataRequired( message = "el campo es obligatorio (yyyy-m-d)")])
     
