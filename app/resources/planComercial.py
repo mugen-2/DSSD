@@ -5,7 +5,7 @@ from flask import redirect, render_template, request, url_for, session, abort, f
 from app.models.user import User
 #from app.helpers.auth import authenticated
 from flask_wtf import FlaskForm
-from app.forms.planComercial_form import Form_planComercial_new
+from app.forms.planComercial_form import Form_planComercial_new, Form_planComercial_verificar
 from werkzeug.security import generate_password_hash, check_password_hash
 from app.db import db
 from app.helpers.auth import authorized
@@ -54,3 +54,23 @@ def create(idcoleccion):
 
         return redirect(url_for("collection_index"))
     return render_template("planComercial/new.html", form=form, idcoleccion=idcoleccion)      
+
+def verificar(idcoleccion):
+    form = Form_planComercial_verificar()
+    return render_template("planComercial/verificar.html", form=form, idcoleccion=idcoleccion)
+
+
+def verificar2(idcoleccion):
+    form = Form_planComercial_verificar()   
+    if (form.validate_on_submit()):
+        idorden = request.form.get("idorden")
+        idorden = int(idorden)
+        ok = OrdenCompra.query.filter_by(orden=idorden).first()
+        if ok:
+
+        
+
+            OrdenCompra.actualizar()
+
+            return redirect(url_for("collection_index", idcoleccion = idcoleccion))
+    return render_template("planComercial/verificar.html", form=form, idcoleccion=idcoleccion)

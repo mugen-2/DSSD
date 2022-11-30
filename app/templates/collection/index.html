@@ -18,6 +18,9 @@
     <a href="{{ url_for('reservaMateriales_index', idcoleccion = collection.id) }}" class="link">Reservar materiales</a><br>
     {% endif %}
     <a href="{{ url_for('collection_detalle', idcoleccion = collection.id )}}" class="link">Detalle</a>
+    {% if 'Comercial' in rol %}
+    <a href="{{ url_for('planComercial_verificar', idcoleccion = collection.id) }}" class="link">Verificar</a>
+    {% endif %}
   </li> 
   {% endfor %}
   {% if 'Diseñador' in rol %}
