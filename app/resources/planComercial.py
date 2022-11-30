@@ -13,6 +13,7 @@ from flask_login import login_required,current_user
 from app.models.planComercial import PlanComercial
 from app.models.ordenCompra import OrdenCompra
 from app.models.collection import Collection
+from app.models.espacioFabricacion import EspacioFabricacion
 from app.resources.auth import getUserBID
 import requests
 import json
@@ -21,6 +22,33 @@ import random
 def new(idcoleccion):
     form = Form_planComercial_new()
     return render_template("planComercial/new.html", form=form, idcoleccion=idcoleccion) 
+
+def verificarLotes(idcoleccion):
+    caseId = Collection.getCaseid(idcoleccion)
+    cookie = session.get("cookie")
+    js = session.get("js")
+    aux = "bonita.tenant=1; BOS_Locale=es; JSESSIONID="+js+"; X-Bonita-API-Token="+cookie
+    headers = {'Cookie': aux, "X-Bonita-API-Token": cookie}
+    response = requests.get(url="http://localhost:8080/bonita/API/bpm/task/?s=Comprobar si se recibieron todos los lotes",headers=headers).json()
+    for instancia in response:
+            if int(instancia["caseId"]) == int(caseId) and instancia["displayName"] == "Comprobar si se recibieron todos los lotes":
+                reservaF = EspacioFabricacion.query.filter_by(idcoleccion = idcoleccion).first()
+                if reservaF == "si" and reservaF:
+                    aleatorio = random.randint(1, 3)
+                    if aleatorio == 2:
+                        flash("Ya llegaron los lotes")
+                        response3 = requests.put(url="http://localhost:8080/bonita/API/bpm/caseVariable/"+str(caseId)+"/lotes",json={"type":"java.lang.Boolean", "value": "true"},headers=headers)
+                    else:
+                        flash("Todavia no llegaron los lotes")
+                else:
+                    flash("Todavia no se termino de fabricar")
+                response2 = requests.get(url="http://localhost:8080/bonita/API/bpm/humanTask?c=10&p=0&f=caseId%3D"+str(caseId)+"",headers=headers)
+                taskId = response2.json()[0]["id"]
+                response3 = requests.get("http://localhost:8080/bonita/API/system/session/unusedid",headers=headers) 
+                userBId = response3.json()["user_id"]
+                response2 = requests.put(url="http://localhost:8080/bonita/API/bpm/userTask/"+taskId+"",json={"assigned_id":userBId},headers=headers)
+                response2 = requests.post(url="http://localhost:8080/bonita/API/bpm/userTask/"+taskId+"/execution",headers=headers)
+    return redirect(url_for("collection_index"))
 
 def create(idcoleccion):
     form = Form_planComercial_new()    
