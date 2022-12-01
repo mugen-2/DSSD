@@ -23,5 +23,7 @@ class OrdenCompra(db.Model, UserMixin):
         db.session.add(ordenCompra)
         db.session.commit()
 
-    def actualizar():
-        
+    def actualizar(idorden):
+        ok = OrdenCompra.query.filter_by(orden=idorden).first()
+        ok.verificado = True
+        db.session.commit()

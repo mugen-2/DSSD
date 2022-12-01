@@ -88,8 +88,8 @@ def create_app(environment="development"):
     app.add_url_rule("/planComercial/<idcoleccion>", "planComercial_new", planComercial.new)
     app.add_url_rule("/planComercial/verificarLlegadaDeLotes/<idcoleccion>", "verificarLlegadaDeLotes", planComercial.verificarLotes)
     app.add_url_rule("/planComercial/<idcoleccion>", "planComercial_create", planComercial.create, methods=["POST"])
-    app.add_url_rule("/planComercial/<idcoleccion>", "planComercial_verificar", planComercial.verificar)
-    app.add_url_rule("/planComercial/<idcoleccion>", "planComercial_verificar2", planComercial.verificar2, methods=["POST"])
+    app.add_url_rule("/planComercial/verificar/<idcoleccion>", "planComercial_verificar", planComercial.verificar)
+    app.add_url_rule("/planComercial/verificar/<idcoleccion>", "planComercial_verificar2", planComercial.verificar2, methods=["POST"])
 
     # Ruta para el Home (usando decorator)
     @app.route("/")

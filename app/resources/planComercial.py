@@ -92,13 +92,12 @@ def verificar2(idcoleccion):
     form = Form_planComercial_verificar()   
     if (form.validate_on_submit()):
         idorden = request.form.get("idorden")
-        idorden = int(idorden)
+        idorden = str(idorden)
         ok = OrdenCompra.query.filter_by(orden=idorden).first()
-        if ok:
-
-        
-
-            OrdenCompra.actualizar()
-
-            return redirect(url_for("collection_index", idcoleccion = idcoleccion))
+        aux = PlanComercial.query.filter_by(idcoleccion=idcoleccion).first()
+        if ok and ok.idplancomercial == aux.id:
+            OrdenCompra.actualizar(idorden)
+            return redirect(url_for("collection_index"))
+        else:
+            flash("Numero de orden incorrecto")    
     return render_template("planComercial/verificar.html", form=form, idcoleccion=idcoleccion)
