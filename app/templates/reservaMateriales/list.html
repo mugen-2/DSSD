@@ -13,7 +13,9 @@
     Precio: {{ material["Costo"] }}  
     {% if reservar %}
     ----
-      <a href="{{ url_for('reservaMateriales_new', idcoleccion = idcoleccion, idmaterial = material['Id'] ) }}" class="link">Reservar</a>
+      {% if material["Cantidad"] > 0 %}
+        <a href="{{ url_for('reservaMateriales_new', idcoleccion = idcoleccion, idmaterial = material['Id'] ) }}" class="link">Reservar</a>
+      {% endif %}
     {% endif %}
 
   </li> 
