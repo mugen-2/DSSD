@@ -1,0 +1,12 @@
+{% extends "layout.html" %}
+{% block title %}Metricas{% endblock %}
+
+{% block head %}
+  {{ super() }} 
+{% endblock %}
+
+{% block content %}
+  <h1>Metrica Bonita 1</h1>  
+  <br>
+  <a href="{{ url_for('metricas_index') }}" class="link">Volver</a>
+{% endblock %}

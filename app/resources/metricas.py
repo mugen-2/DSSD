@@ -42,3 +42,15 @@ def cantImportColeccion():
     importaciones = Importacion.query.all()
     print(len(importaciones))
     return render_template("metricas/cantImportaciones.html")
+
+@login_required
+def bonita1():
+    cookie = session.get("cookie")
+    js = session.get("js")
+    aux = "bonita.tenant=1; BOS_Locale=es; JSESSIONID="+js+"; X-Bonita-API-Token="+cookie
+    headers = {'Cookie': aux, "X-Bonita-API-Token": cookie}
+
+    tareas = requests.get(url="http://localhost:8080/bonita/API/bpm/archivedHumanTask?p=0",headers=headers)
+    print(tareas.content)
+    
+    return render_template("metricas/bon1.html")
