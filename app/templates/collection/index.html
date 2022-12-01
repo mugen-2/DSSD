@@ -16,17 +16,26 @@
         {% if json["Id"] == collection.id and json["TienePlan"] == False %}
           <a href="{{ url_for('planComercial_new', idcoleccion = collection.id) }}" class="link">Plan comercial</a>
         {% endif %}
-        {% if json["Id"] == collection.id and json["TienePlan"] and json["AsignarLotes"] == False %}
+        {% if json["Id"] == collection.id and json["TienePlan"] and json["AsignarLotes"] == False and json["Finalizado"] == False %}
           <a href="{{ url_for('verificarLlegadaDeLotes', idcoleccion = collection.id) }}" class="link">Verificar Llegada de Lotes</a>
         {% endif %}
-        {% if json["Id"] == collection.id and json["AsignarLotes"] %}
+        {% if json["Id"] == collection.id and json["AsignarLotes"] and json["Finalizado"] == False %}
           <a href="{{ url_for('planComercial_verificar', idcoleccion = collection.id) }}" class="link">Asignar Lotes</a>
+        {% endif %}
+        {% if json["Id"] == collection.id and json["Finalizado"] %}
+          , se termino el proceso
         {% endif %}
       {% endfor %}
     {% endif %}
     {% if 'Operador' in rol %}
-      <a href="{{ url_for('reservaMateriales_index', idcoleccion = collection.id) }}" class="link">Reservar materiales</a>
-      <a href="{{ url_for('collection_detalle', idcoleccion = collection.id )}}" class="link">Detalle</a>
+      {% for json in op %}
+        {% if json["Id"] == collection.id and json["TieneReservaFabricacion"] == False %}
+          <a href="{{ url_for('reservaMateriales_index', idcoleccion = collection.id) }}" class="link">Reservar materiales</a>
+        {% endif %}
+        {% if json["Id"] == collection.id and json["TieneReservaFabricacion"] %}
+          <a href="{{ url_for('collection_detalle', idcoleccion = collection.id )}}" class="link">Detalle</a>
+        {% endif %}
+      {% endfor %}
     {% endif %}
   </li> 
   {% endfor %}

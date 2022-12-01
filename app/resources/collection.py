@@ -38,15 +38,24 @@ def index():
     aux = []
     for collection in collections.items:
         aux2 = False
+        aux3 = PlanComercial.ordenesDeComprasListas(collection.id)
         if PlanComercial.existe(collection.id):
-            aux.append({"TienePlan": False,"Id": collection.id, "AsignarLotes": aux2})
+            aux.append({"TienePlan": False,"Id": collection.id, "AsignarLotes": aux2, "Finalizado": aux3})
         else:
             for y in x:
                 if int(y["CaseId"]) == int(collection.caseId):
                     aux2 = True
-            aux.append({"TienePlan": True,"Id": collection.id, "AsignarLotes": aux2})
+            aux.append({"TienePlan": True,"Id": collection.id, "AsignarLotes": aux2, "Finalizado": aux3})
+    
+    op = []
+    for collection in collections.items:
+        if EspacioFabricacion.tieneEspacioFabricacion(collection.id):
+            op.append({"TieneReservaFabricacion": True,"Id": collection.id})
+        else:
+            op.append({"TieneReservaFabricacion": False,"Id": collection.id})
+        
     print(aux)
-    return render_template("collection/index.html",collections=collections,rol=rol,aux=aux)
+    return render_template("collection/index.html",collections=collections,rol=rol,aux=aux, op=op)
 
 @login_required
 def new():
