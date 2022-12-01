@@ -94,7 +94,7 @@ def detalle(idcoleccion):
                     taskId = x["id"]
             response2 = requests.put(url="http://localhost:8080/bonita/API/bpm/userTask/"+taskId+"",json={"assigned_id":"18"},headers=headers)
             response2 = requests.post(url="http://localhost:8080/bonita/API/bpm/userTask/"+taskId+"/execution",headers=headers)
-    
+    #Consulta para ver si se terminaron todas las etapas de fabricacion
     response = requests.get(url="http://localhost:8080/bonita/API/bpm/task/?s=Comprobar si se completaron todas las etapas",headers=headers).json()
     for instancia in response:
         if int(instancia["caseId"]) == int(caseId) and instancia["displayName"] == "Comprobar si se completaron todas las etapas":
@@ -108,7 +108,6 @@ def detalle(idcoleccion):
                     taskId = x["id"]
             response2 = requests.put(url="http://localhost:8080/bonita/API/bpm/userTask/"+taskId+"",json={"assigned_id":"18"},headers=headers)
             response2 = requests.post(url="http://localhost:8080/bonita/API/bpm/userTask/"+taskId+"/execution",headers=headers)
-    
     
     reservaMateriales = ReservaMateriales.query.filter_by(idcoleccion = idcoleccion).all() #id de todas las reservas para esa coleccion
     i = 0

@@ -101,6 +101,25 @@ def verificar2(idcoleccion):
         aux = PlanComercial.query.filter_by(idcoleccion=idcoleccion).first()
         if ok and ok.idplancomercial == aux.id:
             OrdenCompra.actualizar(idorden)
+            flash("Se ha verificado el numero de orden")
+            if PlanComercial.ordenesDeComprasListas(idcoleccion):
+                caseId = Collection.getCaseid(idcoleccion)
+                cookie = session.get("cookie")
+                js = session.get("js")
+                aux = "bonita.tenant=1; BOS_Locale=es; JSESSIONID="+js+"; X-Bonita-API-Token="+cookie
+                headers = {'Cookie': aux, "X-Bonita-API-Token": cookie}
+                response = requests.get(url="http://localhost:8080/bonita/API/bpm/task/?s=Asociar lotes con ordenes",headers=headers).json()
+                for instancia in response:
+                    if int(instancia["caseId"]) == int(caseId) and instancia["displayName"] == "Asociar lotes con ordenes":
+                        response2 = requests.get(url="http://localhost:8080/bonita/API/bpm/humanTask?c=10&p=0&f=caseId%3D"+str(caseId)+"",headers=headers).json()
+                        for x in response2:
+                            if x["displayName"] == "Asociar lotes con ordenes":
+                                taskId = x["id"]
+                        response3 = requests.get("http://localhost:8080/bonita/API/system/session/unusedid",headers=headers) 
+                        userBId = response3.json()["user_id"]
+                        response2 = requests.put(url="http://localhost:8080/bonita/API/bpm/userTask/"+taskId+"",json={"assigned_id":userBId},headers=headers)
+                        response2 = requests.post(url="http://localhost:8080/bonita/API/bpm/userTask/"+taskId+"/execution",headers=headers)
+                        flash("Todo el proceso ha sido terminado")
             return redirect(url_for("collection_index"))
         else:
             flash("Numero de orden incorrecto")    

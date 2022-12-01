@@ -5,6 +5,7 @@ from sqlalchemy.dialects.mysql import TINYINT
 from sqlalchemy.orm import relationship
 from flask_login import UserMixin
 from app.db import db
+from app.models.ordenCompra import OrdenCompra
 
 class PlanComercial(db.Model, UserMixin):
     __tablename__ = "planComercial"
@@ -29,3 +30,6 @@ class PlanComercial(db.Model, UserMixin):
             return False
         else:
             return True
+    
+    def ordenesDeComprasListas(id):
+        return OrdenCompra.todasListas(id)
