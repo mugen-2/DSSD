@@ -28,7 +28,9 @@ def index(idcoleccion):
             for x in response2:
                 if x["displayName"] == "Reserva de materiales":
                     taskId = x["id"]
-            response2 = requests.put(url="http://localhost:8080/bonita/API/bpm/userTask/"+taskId+"",json={"assigned_id":"18"},headers=headers)
+            response3 = requests.get("http://localhost:8080/bonita/API/system/session/unusedid",headers=headers) 
+            userBId = response3.json()["user_id"]
+            response2 = requests.put(url="http://localhost:8080/bonita/API/bpm/userTask/"+taskId+"",json={"assigned_id":userBId},headers=headers)
             response2 = requests.post(url="http://localhost:8080/bonita/API/bpm/userTask/"+taskId+"/execution",headers=headers)
 
     response = requests.get("https://dssdapi.fly.dev/api/listarf/")
@@ -76,7 +78,9 @@ def create(idcoleccion, idfabricante):
                     for x in response2:
                         if x["displayName"] == "Reserva de espacio de fabricacion":
                             taskId = x["id"]
-                    response2 = requests.put(url="http://localhost:8080/bonita/API/bpm/userTask/"+taskId+"",json={"assigned_id":"18"},headers=headers)
+                    response3 = requests.get("http://localhost:8080/bonita/API/system/session/unusedid",headers=headers) 
+                    userBId = response3.json()["user_id"]
+                    response2 = requests.put(url="http://localhost:8080/bonita/API/bpm/userTask/"+taskId+"",json={"assigned_id":userBId},headers=headers)
                     response2 = requests.post(url="http://localhost:8080/bonita/API/bpm/userTask/"+taskId+"/execution",headers=headers)
                     print(response)
                     if(response["Codigo"]!=54):
@@ -114,7 +118,9 @@ def verificar(idcoleccion):
             for x in response2:
                 if x["displayName"] == "Comprobar estado de fabricación":
                     taskId = x["id"]
-            response2 = requests.put(url="http://localhost:8080/bonita/API/bpm/userTask/"+taskId+"",json={"assigned_id":"18"},headers=headers)
+            response3 = requests.get("http://localhost:8080/bonita/API/system/session/unusedid",headers=headers) 
+            userBId = response3.json()["user_id"]
+            response2 = requests.put(url="http://localhost:8080/bonita/API/bpm/userTask/"+taskId+"",json={"assigned_id":userBId},headers=headers)
             response2 = requests.post(url="http://localhost:8080/bonita/API/bpm/userTask/"+taskId+"/execution",headers=headers)
             if descripcionDeHito == "Entrega terminada":
                 EspacioFabricacion.entregado(reserva.idreserva)

@@ -29,7 +29,9 @@ def index(idcoleccion):
             for x in response2:
                 if x["displayName"] == "Establecer materiales y fechas":
                     taskId = x["id"]
-            response2 = requests.put(url="http://localhost:8080/bonita/API/bpm/userTask/"+taskId+"",json={"assigned_id":"18"},headers=headers)
+            response3 = requests.get("http://localhost:8080/bonita/API/system/session/unusedid",headers=headers) 
+            userBId = response3.json()["user_id"]
+            response2 = requests.put(url="http://localhost:8080/bonita/API/bpm/userTask/"+taskId+"",json={"assigned_id":userBId},headers=headers)
             response2 = requests.post(url="http://localhost:8080/bonita/API/bpm/userTask/"+taskId+"/execution",headers=headers)
 
     page =request.args.get('page',1,type=int)
@@ -69,8 +71,8 @@ def create(idcoleccion, idmaterial):
         cantidad = request.form.get("cantidad")
         cantidad = int(cantidad)
 
-        nombre = "nestor"
-        contra = "123"
+        nombre = User.getUserB(session["id"])
+        contra = User.getPasswordB(session["id"])
         usuario = {'nombre': nombre, 'contra': contra}
         cookie = requests.post("https://dssdapi.fly.dev/api/log/", usuario)
 
@@ -103,7 +105,9 @@ def verificar(idreserva):
             for x in response2:
                 if x["displayName"] == "Consultar fechas con proveedor":
                     taskId = x["id"]
-            response2 = requests.put(url="http://localhost:8080/bonita/API/bpm/userTask/"+taskId+"",json={"assigned_id":"18"},headers=headers)
+            response3 = requests.get("http://localhost:8080/bonita/API/system/session/unusedid",headers=headers) 
+            userBId = response3.json()["user_id"]
+            response2 = requests.put(url="http://localhost:8080/bonita/API/bpm/userTask/"+taskId+"",json={"assigned_id":userBId},headers=headers)
             response2 = requests.post(url="http://localhost:8080/bonita/API/bpm/userTask/"+taskId+"/execution",headers=headers)
                     
     #Consulta para hitos
@@ -124,7 +128,9 @@ def verificar(idreserva):
                 for x in response2:
                     if x["displayName"] == "Comprobar cumplimiento de hito de obtencion de materiales":
                         taskId = x["id"]
-                response2 = requests.put(url="http://localhost:8080/bonita/API/bpm/userTask/"+taskId+"",json={"assigned_id":"18"},headers=headers)
+                response3 = requests.get("http://localhost:8080/bonita/API/system/session/unusedid",headers=headers) 
+                userBId = response3.json()["user_id"]
+                response2 = requests.put(url="http://localhost:8080/bonita/API/bpm/userTask/"+taskId+"",json={"assigned_id":userBId},headers=headers)
                 response2 = requests.post(url="http://localhost:8080/bonita/API/bpm/userTask/"+taskId+"/execution",headers=headers)
                 if descripcionDeHito == "Se termino la etapa":
                     ReservaMateriales.entregado(reserva.idreserva)

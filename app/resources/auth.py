@@ -28,6 +28,7 @@ def authenticate():
         if user.area != "ADMIN":
             passwordB = User.getPasswordB(user.id)
             userB= User.getUserB(user.id)
+            session["id"] = user.id
             identification = {'username':userB, 'password': passwordB}
             response = requests.post("http://localhost:8080/bonita/loginservice", identification)
             if(response.status_code == 401):
