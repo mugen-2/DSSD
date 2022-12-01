@@ -31,5 +31,6 @@ class PlanComercial(db.Model, UserMixin):
         else:
             return True
     
-    def ordenesDeComprasListas(id):
-        return OrdenCompra.todasListas(id)
+    def ordenesDeComprasListas(idcoleccion):
+        idplan = PlanComercial.query.filter_by(idcoleccion=idcoleccion).first().id
+        return OrdenCompra.todasListas(idplan)

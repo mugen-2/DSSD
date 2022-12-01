@@ -28,8 +28,8 @@ class OrdenCompra(db.Model, UserMixin):
         ok.verificado = True
         db.session.commit()
     
-    def todasListas(idcoleccion):
-        ordenes = OrdenCompra.query.filter_by(idcoleccion=idcoleccion).all()
+    def todasListas(idplan):
+        ordenes = OrdenCompra.query.filter_by(idplancomercial=idplan).all()
         aux = True
         for orden in ordenes:
             if orden.verificado == False and aux:

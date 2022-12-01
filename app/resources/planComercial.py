@@ -33,8 +33,9 @@ def verificarLotes(idcoleccion):
     for instancia in response:
             if int(instancia["caseId"]) == int(caseId) and instancia["displayName"] == "Comprobar si se recibieron todos los lotes":
                 reservaF = EspacioFabricacion.query.filter_by(idcoleccion = idcoleccion).first()
-                if reservaF == "si" and reservaF:
-                    aleatorio = random.randint(1, 3)
+                if reservaF.estado == "si" and reservaF:
+                    aleatorio = random.randint(0, 3)
+                    print(aleatorio)
                     if aleatorio == 2:
                         flash("Ya llegaron los lotes")
                         response3 = requests.put(url="http://localhost:8080/bonita/API/bpm/caseVariable/"+str(caseId)+"/lotes",json={"type":"java.lang.Boolean", "value": "true"},headers=headers)
