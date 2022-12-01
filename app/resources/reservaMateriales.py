@@ -24,9 +24,11 @@ def index(idcoleccion):
     caseId = Collection.getCaseid(idcoleccion)
     for instancia in response:
         print(instancia["caseId"])
-        if int(instancia["caseId"]) == int(caseId):
-            response2 = requests.get(url="http://localhost:8080/bonita/API/bpm/humanTask?c=10&p=0&f=caseId%3D"+str(caseId)+"",headers=headers)
-            taskId = response2.json()[0]["id"]
+        if int(instancia["caseId"]) == int(caseId) and instancia["displayName"] == "Establecer materiales y fechas":
+            response2 = requests.get(url="http://localhost:8080/bonita/API/bpm/humanTask?c=10&p=0&f=caseId%3D"+str(caseId)+"",headers=headers).json()
+            for x in response2:
+                if x["displayName"] == "Establecer materiales y fechas":
+                    taskId = x["id"]
             response2 = requests.put(url="http://localhost:8080/bonita/API/bpm/userTask/"+taskId+"",json={"assigned_id":"18"},headers=headers)
             response2 = requests.post(url="http://localhost:8080/bonita/API/bpm/userTask/"+taskId+"/execution",headers=headers)
 
@@ -49,13 +51,9 @@ def list(idcoleccion):
     response = requests.get(url="http://localhost:8080/bonita/API/bpm/task/?s=Reserva de materiales",headers=headers).json()    # Buscamos para mostrar o no un boton
     reservar = False
     caseId = Collection.getCaseid(idcoleccion)
-    print(caseId)
     for instancia in response:
-        print(caseId)
-        print(instancia) 
         if int(instancia["caseId"]) == int(caseId) and instancia["displayName"] == "Reserva de materiales":
             reservar = True
-    print(reservar)
     response = requests.get("https://dssdapi.fly.dev/api/materiales/")
     materiales = response.json()["materiales"][0]
     return render_template("reservaMateriales/list.html",materiales=materiales, idcoleccion=idcoleccion, reservar = reservar) 
@@ -101,8 +99,10 @@ def verificar(idreserva):
                 response3 = requests.put(url="http://localhost:8080/bonita/API/bpm/caseVariable/"+str(caseId)+"/incumplimientoFechas",json={"type":"java.lang.Boolean", "value": "true"},headers=headers)
                 flash("El material "+response2['Material']+" ha sido retrasado y debe de reestructurar la fecha de entrega")
                 #Se puede cambiar el estado en la bd a retrasado para que sea mas facil chequear si mostramos el boton
-            response2 = requests.get(url="http://localhost:8080/bonita/API/bpm/humanTask?c=10&p=0&f=caseId%3D"+str(caseId)+"",headers=headers)
-            taskId = response2.json()[0]["id"]
+            response2 = requests.get(url="http://localhost:8080/bonita/API/bpm/humanTask?c=10&p=0&f=caseId%3D"+str(caseId)+"",headers=headers).json()
+            for x in response2:
+                if x["displayName"] == "Consultar fechas con proveedor":
+                    taskId = x["id"]
             response2 = requests.put(url="http://localhost:8080/bonita/API/bpm/userTask/"+taskId+"",json={"assigned_id":"18"},headers=headers)
             response2 = requests.post(url="http://localhost:8080/bonita/API/bpm/userTask/"+taskId+"/execution",headers=headers)
                     
@@ -119,8 +119,10 @@ def verificar(idreserva):
                     flash("El material x por ahora, ha cumplido el siguiente hito: "+ descripcionDeHito)
                 else:
                     response3 = requests.put(url="http://localhost:8080/bonita/API/bpm/caseVariable/"+str(caseId)+"/hito",json={"type":"java.lang.Boolean", "value": "false"},headers=headers)
-                response2 = requests.get(url="http://localhost:8080/bonita/API/bpm/humanTask?c=10&p=0&f=caseId%3D"+str(caseId)+"",headers=headers)
-                taskId = response2.json()[0]["id"]
+                response2 = requests.get(url="http://localhost:8080/bonita/API/bpm/humanTask?c=10&p=0&f=caseId%3D"+str(caseId)+"",headers=headers).json()
+                for x in response2:
+                    if x["displayName"] == "Comprobar cumplimiento de hito de obtencion de materiales":
+                        taskId = x["id"]
                 response2 = requests.put(url="http://localhost:8080/bonita/API/bpm/userTask/"+taskId+"",json={"assigned_id":"18"},headers=headers)
                 response2 = requests.post(url="http://localhost:8080/bonita/API/bpm/userTask/"+taskId+"/execution",headers=headers)
                 if descripcionDeHito == "Se termino la etapa":
