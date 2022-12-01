@@ -116,7 +116,8 @@ def verificar(idreserva):
                 descripcionDeHito = response2['Descripcion']
                 if descripcionDeHito != "No se registra ningun hito":
                     response3 = requests.put(url="http://localhost:8080/bonita/API/bpm/caseVariable/"+str(caseId)+"/hito",json={"type":"java.lang.Boolean", "value": "true"},headers=headers)
-                    flash("El material x por ahora, ha cumplido el siguiente hito: "+ descripcionDeHito)
+                    response4 = requests.get("https://dssdapi.fly.dev/api/listarr/"+str(reserva.idreserva)+"/").json()
+                    flash("El material "+response2['Material']+", ha cumplido el siguiente hito: "+ descripcionDeHito)
                 else:
                     response3 = requests.put(url="http://localhost:8080/bonita/API/bpm/caseVariable/"+str(caseId)+"/hito",json={"type":"java.lang.Boolean", "value": "false"},headers=headers)
                 response2 = requests.get(url="http://localhost:8080/bonita/API/bpm/humanTask?c=10&p=0&f=caseId%3D"+str(caseId)+"",headers=headers).json()
