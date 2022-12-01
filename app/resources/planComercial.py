@@ -42,8 +42,10 @@ def verificarLotes(idcoleccion):
                         flash("Todavia no llegaron los lotes")
                 else:
                     flash("Todavia no se termino de fabricar")
-                response2 = requests.get(url="http://localhost:8080/bonita/API/bpm/humanTask?c=10&p=0&f=caseId%3D"+str(caseId)+"",headers=headers)
-                taskId = response2.json()[0]["id"]
+                response2 = requests.get(url="http://localhost:8080/bonita/API/bpm/humanTask?c=10&p=0&f=caseId%3D"+str(caseId)+"",headers=headers).json()
+                for x in response2:
+                    if x["displayName"] == "Comprobar si se recibieron todos los lotes":
+                        taskId = x["id"]
                 response3 = requests.get("http://localhost:8080/bonita/API/system/session/unusedid",headers=headers) 
                 userBId = response3.json()["user_id"]
                 response2 = requests.put(url="http://localhost:8080/bonita/API/bpm/userTask/"+taskId+"",json={"assigned_id":userBId},headers=headers)
@@ -61,8 +63,10 @@ def create(idcoleccion):
         response = requests.get(url="http://localhost:8080/bonita/API/bpm/task/?s=Diseñar plan comercial",headers=headers).json()
         for instancia in response:
             if int(instancia["caseId"]) == int(caseId) and instancia["displayName"] == "Diseñar plan comercial":
-                response2 = requests.get(url="http://localhost:8080/bonita/API/bpm/humanTask?c=10&p=0&f=caseId%3D"+str(caseId)+"",headers=headers)
-                taskId = response2.json()[0]["id"]
+                response2 = requests.get(url="http://localhost:8080/bonita/API/bpm/humanTask?c=10&p=0&f=caseId%3D"+str(caseId)+"",headers=headers).json()
+                for x in response2:
+                    if x["displayName"] == "Diseñar plan comercial":
+                        taskId = x["id"]
                 response3 = requests.get("http://localhost:8080/bonita/API/system/session/unusedid",headers=headers) 
                 userBId = response3.json()["user_id"]
                 response2 = requests.put(url="http://localhost:8080/bonita/API/bpm/userTask/"+taskId+"",json={"assigned_id":userBId},headers=headers)
