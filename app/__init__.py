@@ -65,7 +65,9 @@ def create_app(environment="development"):
     app.add_url_rule("/colecciones/nuevo", "collection_new", collection.new)
     app.add_url_rule("/colecciones/detalle/<idcoleccion>", "collection_detalle", collection.detalle)
     app.add_url_rule("/colecciones/<idreserva>", "collection_new_reasignar", collection.newReasingarfecha)
-    app.add_url_rule("/colecciones/reasignar/<idreserva>", "collection_reasignar", collection.reasignarFecha,methods=["POST"])
+    app.add_url_rule("/colecciones/reasignar/<idreserva>", "collection_reasignar", collection.reasignarFecha, methods=["POST"])
+    app.add_url_rule("/colecciones/newImportacion/<idcoleccion>", "collection_new_importacion", collection.newImportacion)
+    app.add_url_rule("/colecciones/importacion/<idcoleccion>", "collection_importacion", collection.importacion, methods=["POST"])
     
     #Rutas Metricas
     app.add_url_rule("/metricas", "metricas_index", metricas.index)

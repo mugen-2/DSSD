@@ -68,19 +68,20 @@ def create(idcoleccion, idfabricante):
                 if int(instancia["caseId"]) == int(caseId) and instancia["displayName"] == "Reserva de espacio de fabricacion":
                     response = requests.get(url="https://dssdapi.fly.dev/api/listarf/"+str(idfabricante)+"/").json()
                     if(response["Codigo"]!=54): #Falta poder chequear el codigo de un fabricante en particular
-                        response = requests.put(url="http://localhost:8080/bonita/API/bpm/caseVariable/"+str(caseId)+"/hayQueImportar",json={"type":"java.lang.Boolean", "value": "true"},headers=headers)
+                        response3 = requests.put(url="http://localhost:8080/bonita/API/bpm/caseVariable/"+str(caseId)+"/hayQueImportar",json={"type":"java.lang.Boolean", "value": "true"},headers=headers)
                         print(response)
                     response2 = requests.get(url="http://localhost:8080/bonita/API/bpm/humanTask?c=10&p=0&f=caseId%3D"+str(caseId)+"",headers=headers)
                     taskId = response2.json()[0]["id"]
                     response2 = requests.put(url="http://localhost:8080/bonita/API/bpm/userTask/"+taskId+"",json={"assigned_id":"18"},headers=headers)
                     response2 = requests.post(url="http://localhost:8080/bonita/API/bpm/userTask/"+taskId+"/execution",headers=headers)
+                    print(response)
                     if(response["Codigo"]!=54):
-                        return redirect(url_for("espacioFabricacion_index", idcoleccion = idcoleccion)) #Hacer un formulario para la importacion en la etapa de fabricacion
+                        return redirect(url_for("collection_new_importacion", idcoleccion = idcoleccion)) #Hacer un formulario para la importacion en la etapa de fabricacion
             print(caseId)
 
             return redirect(url_for("collection_index", idcoleccion = idcoleccion))
         else:
-            print("Imposible maestro")
+            flash("No hay reservas disponibles para esas fechas")
     return render_template("espacioFabricacion/new.html", form=form, idcoleccion=idcoleccion, idfabricante=idfabricante) 
 
 def verificar(idcoleccion):

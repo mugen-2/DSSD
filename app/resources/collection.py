@@ -7,6 +7,7 @@ from app.models.user import User
 from flask_wtf import FlaskForm
 from app.forms.collection_form import Form_collection_new
 from app.forms.newDate_form import Form_Date_new
+from app.forms.Importacion_form import Form_Importacion_new
 from werkzeug.security import generate_password_hash, check_password_hash
 from app.db import db
 from app.helpers.auth import authorized
@@ -14,6 +15,7 @@ from flask_login import login_required,current_user
 from app.models.collection import Collection
 from app.models.reservaMateriales import ReservaMateriales
 from app.models.espacioFabricacion import EspacioFabricacion
+from app.models.importacion import Importacion
 import requests
 import json
 
@@ -149,3 +151,27 @@ def reasignarFecha(idreserva):
         else:
             flash("No se puede reservar en ese periodo de fechas")
     return render_template("collection/newDate.html",form=form,idreserva=idreserva) 
+
+@login_required
+def newImportacion(idcoleccion):
+    form = Form_Importacion_new()
+    return render_template("collection/newImportacion.html",form=form,idcoleccion=idcoleccion)
+
+@login_required
+def importacion(idcoleccion):
+    form = Form_Importacion_new()
+    if(form.validate_on_submit()):
+        codigop = request.form.get("codigop")
+        direccion = request.form.get("direccion")
+        Importacion.crear(codigop,direccion,idcoleccion)
+        cookie = session.get("cookie")
+        js = session.get("js")
+        aux = "bonita.tenant=1; BOS_Locale=es; JSESSIONID="+js+"; X-Bonita-API-Token="+cookie
+        headers = {'Cookie': aux, "X-Bonita-API-Token": cookie}
+        caseId = Collection.getCaseid(idcoleccion)
+        response2 = requests.get(url="http://localhost:8080/bonita/API/bpm/humanTask?c=10&p=0&f=caseId%3D"+str(caseId)+"",headers=headers)
+        taskId = response2.json()[0]["id"]
+        response2 = requests.put(url="http://localhost:8080/bonita/API/bpm/userTask/"+taskId+"",json={"assigned_id":"18"},headers=headers)
+        response2 = requests.post(url="http://localhost:8080/bonita/API/bpm/userTask/"+taskId+"/execution",headers=headers)
+        return redirect(url_for("collection_index"))
+    return render_template("collection/newImportacion.html",form=form,idcoleccion=idcoleccion) 

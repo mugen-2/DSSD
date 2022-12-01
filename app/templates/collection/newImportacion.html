@@ -1,23 +1,23 @@
 {% extends "layout.html" %}
-{% block title %}Reasignar fechas reserva{% endblock %}
+{% block title %}Definir importacion{% endblock %}
 {% block head %}
   {{ super() }}
 {% endblock %}
 {% block content %}
-  <h1>Reasingar fechas de una reserva </h1>
-  <form class="form-control" action="{{ url_for('collection_reasignar', idreserva = idreserva) }}" method="POST" novalidate>
+  <h1>Importacion </h1>
+  <form class="form-control" action="{{ url_for('collection_importacion', idcoleccion = idcoleccion) }}" method="POST" novalidate>
     {{form.hidden_tag()}}
 
-    <label for="fecha">Fecha</label>
-    {{form.fecha}}
-    {% for error in form.fecha.errors %}
+    <label for="codigop">Codigo postal</label>
+    {{form.codigop}}
+    {% for error in form.codigop.errors %}
     <span style="color:red;" >{{error}}</span>
     {% endfor %}
     <br>
 
-    <label for="fecha2">Fecha2</label>
-    {{form.fecha2}}
-    {% for error in form.fecha2.errors %}
+    <label for="direccion">Nueva direccion</label>
+    {{form.direccion}}
+    {% for error in form.direccion.errors %}
     <span style="color:red;" >{{error}}</span>
     {% endfor %}
     <br>
