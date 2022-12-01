@@ -27,14 +27,15 @@ def cantResxMaterial():
     materiales = requests.get("https://dssdapi.fly.dev/api/materiales/").json()["materiales"][0]
     lenght=len(materiales)
     list = [0] * lenght
+    print(materiales)
     for reserva in reservas:
         list[int(reserva["Material"])-1] = list[int(reserva["Material"])-1] + 1
     aux= []
     for material in materiales:
-        print(type(material))
-        aux.append( { "Nombre":material["Nombre"], "Cantidad":list[material["Id"] - 1] })
+        #print(type(material))
+        aux.append( { "Nombre":material["Nombre"],"Empresa":material["Empresa"] , "Cantidad":list[material["Id"] - 1] })
 
-    print(aux)
+    #print(aux)
     return render_template("metricas/cantResxMaterial.html",list=aux)
 
 @login_required
