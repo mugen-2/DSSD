@@ -11,9 +11,8 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from app.db import db
 from app.helpers.auth import authorized
 from flask_login import login_required,current_user
+from app.models.importacion import Importacion
 from app.models.collection import Collection
-from app.models.reservaMateriales import ReservaMateriales
-from app.models.espacioFabricacion import EspacioFabricacion
 import requests
 import json
 
@@ -37,3 +36,9 @@ def cantResxMaterial():
 
     print(aux)
     return render_template("metricas/cantResxMaterial.html",list=aux)
+
+@login_required
+def cantImportColeccion():
+    importaciones = Importacion.query.all()
+    print(len(importaciones))
+    return render_template("metricas/cantImportaciones.html")

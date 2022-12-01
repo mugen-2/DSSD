@@ -6,12 +6,7 @@
 {% endblock %}
 
 {% block content %}
-  <h1>Cantidad de reservas por material</h1>
-    {% for a in list %}
-        {{a["Nombre"]}}: {{a["Cantidad"]}}
-        <br>
-    {% endfor %}
-
+  <h1>Cantidad de colecciones que importan materiales</h1>  
   <br>
   <a href="{{ url_for('metricas_index') }}" class="link">Volver</a>
 {% endblock %}
