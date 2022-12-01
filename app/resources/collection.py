@@ -15,6 +15,7 @@ from flask_login import login_required,current_user
 from app.models.collection import Collection
 from app.models.reservaMateriales import ReservaMateriales
 from app.models.espacioFabricacion import EspacioFabricacion
+from app.models.planComercial import PlanComercial
 from app.models.importacion import Importacion
 import requests
 import json
@@ -25,7 +26,14 @@ def index():
     collections = Collection.query.order_by(Collection.nombre)\
             .paginate(page=page, per_page=5, error_out=False)
     rol= session["rol"]
-    return render_template("collection/index.html",collections=collections,rol=rol)
+    aux = []
+    for collection in collections.items:
+        if PlanComercial.existe(collection.id):
+            aux.append({"TienePlan": False,"Id": collection.id})
+        else:
+            aux.append({"TienePlan": True,"Id": collection.id})
+    print(aux)
+    return render_template("collection/index.html",collections=collections,rol=rol,aux=aux)
 
 @login_required
 def new():

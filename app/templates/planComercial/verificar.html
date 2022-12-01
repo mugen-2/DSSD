@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+{% block title %}Plan Comercial{% endblock %}
+{% block head %}
+  {{ super() }}
+{% endblock %}
+{% block content %}
+  <h1>Verificar un plan comercial </h1>
+  <form class="form-control" action="{{ url_for('planComercial_verificar2', idcoleccion = idcoleccion) }}" method="POST" novalidate>
+    {{form.hidden_tag()}}
+
+    <label for="idorden">ID orden de compra</label>
+    {{form.idorden}}
+    {% for error in form.idorden.errors %}
+    <span style="color:red;" >{{error}}</span>
+    {% endfor %}
+    <br>
+    
+    <p>
+      <input type="submit" value="Verificar">
+      <button type="reset">Limpiar</button>
+    </p>
+  </form>
+  <a href="{{ url_for('collection_index') }}" class="link">Volver</a>
+{% endblock %}

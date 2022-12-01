@@ -14,3 +14,8 @@ class Form_planComercial_new(FlaskForm):
 
     lotes= IntegerField('lotes', 
         validators=[DataRequired( message = "el campo es obligatorio")])
+
+class Form_planComercial_verificar(FlaskForm):
+
+    idorden= IntegerField('idorden', 
+        validators=[DataRequired( message = "el campo es obligatorio")])
