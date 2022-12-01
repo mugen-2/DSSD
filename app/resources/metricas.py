@@ -64,9 +64,21 @@ def bonita2():
     js = session.get("js")
     aux = "bonita.tenant=1; BOS_Locale=es; JSESSIONID="+js+"; X-Bonita-API-Token="+cookie
     headers = {'Cookie': aux, "X-Bonita-API-Token": cookie}
+    p=0
+    aux3 = []
+    aux2 = requests.get(url="http://localhost:8080/bonita/API/bpm/archivedHumanTask?p=0",headers=headers).json()
+    processId = requests.get(url="http://localhost:8080/bonita/API/bpm/process/?s=Diseño",headers=headers).json()[0]["id"]
+    actores= requests.get(url="http://localhost:8080/bonita/API/bpm/actor?p=0&c=100&f=process_id="+processId+"",headers=headers).json()
+    list = [0] * 11
+    while aux2:
+        p=p+1
+        aux3.append(aux2)
+        aux2 = requests.get(url="http://localhost:8080/bonita/API/bpm/archivedHumanTask?p="+str(p)+"",headers=headers).json()
 
-    tareas = requests.get(url="http://localhost:8080/bonita/API/bpm/archivedHumanTask?p=0&f=name=Detallar la coleccion",headers=headers).json()
+    aux4= []
+    for instancia in aux3:
+        for a in instancia:
+            list[int(a["actorId"])] = list[int(a["actorId"])] + 1 
 
-    print(tareas)
-
-    return render_template("metricas/bon2.html")
+    print (list)
+    return render_template("metricas/bon2.html",list=list)
