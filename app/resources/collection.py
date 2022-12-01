@@ -26,12 +26,25 @@ def index():
     collections = Collection.query.order_by(Collection.nombre)\
             .paginate(page=page, per_page=5, error_out=False)
     rol= session["rol"]
+    x = []
+    cookie = session.get("cookie")
+    js = session.get("js")
+    aux= "bonita.tenant=1; BOS_Locale=es; JSESSIONID="+js+"; X-Bonita-API-Token="+cookie
+    headers = {'Cookie': aux, "X-Bonita-API-Token": cookie}
+    response = requests.get(url="http://localhost:8080/bonita/API/bpm/task/?s=Asociar lotes con ordenes",headers=headers).json()
+    for istancia in response:
+        if istancia["displayName"] == "Asociar lotes con ordenes":
+            x.append({"CaseId": istancia["caseId"]})
     aux = []
     for collection in collections.items:
+        aux2 = False
         if PlanComercial.existe(collection.id):
-            aux.append({"TienePlan": False,"Id": collection.id})
+            aux.append({"TienePlan": False,"Id": collection.id, "AsignarLotes": aux2})
         else:
-            aux.append({"TienePlan": True,"Id": collection.id})
+            for y in x:
+                if int(y["CaseId"]) == int(collection.caseId):
+                    aux2 = True
+            aux.append({"TienePlan": True,"Id": collection.id, "AsignarLotes": aux2})
     print(aux)
     return render_template("collection/index.html",collections=collections,rol=rol,aux=aux)
 
@@ -101,7 +114,7 @@ def detalle(idcoleccion):
             print("Entro en el if")
             if EspacioFabricacion.query.filter_by(idcoleccion = idcoleccion).first().estado == "si":
                 response3 = requests.put(url="http://localhost:8080/bonita/API/bpm/caseVariable/"+str(caseId)+"/finalizacionEtapasF",json={"type":"java.lang.Boolean", "value": "true"},headers=headers)
-                flash("SAAAAAAAAAAAAAPPPPEEEEEEEEEEEE")
+                #flash("SAAAAAAAAAAAAAPPPPEEEEEEEEEEEE")
             response2 = requests.get(url="http://localhost:8080/bonita/API/bpm/humanTask?c=10&p=0&f=caseId%3D"+str(caseId)+"",headers=headers).json()
             for x in response2:
                 if x["displayName"] == "Comprobar si se completaron todas las etapas":
