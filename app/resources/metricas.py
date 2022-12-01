@@ -55,3 +55,17 @@ def bonita1():
             
     print(CantR)
     return render_template("metricas/bon1.html",CantR=CantR)
+
+
+@login_required
+def bonita2():
+    cookie = session.get("cookie")
+    js = session.get("js")
+    aux = "bonita.tenant=1; BOS_Locale=es; JSESSIONID="+js+"; X-Bonita-API-Token="+cookie
+    headers = {'Cookie': aux, "X-Bonita-API-Token": cookie}
+
+    tareas = requests.get(url="http://localhost:8080/bonita/API/bpm/archivedHumanTask?p=0&f=name=Detallar la coleccion",headers=headers).json()
+
+    print(tareas)
+
+    return render_template("metricas/bon2.html")

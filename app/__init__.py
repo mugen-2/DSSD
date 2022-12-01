@@ -74,6 +74,7 @@ def create_app(environment="development"):
     app.add_url_rule("/metricas/crm", "cantResxMaterial", metricas.cantResxMaterial)
     app.add_url_rule("/metricas/cli", "col_importadas", metricas.cantImportColeccion)
     app.add_url_rule("/metricas/bon1", "bon1", metricas.bonita1)
+    app.add_url_rule("/metricas/bon2", "bon2", metricas.bonita2)
 
     # Rutas Reserva Materiales
     app.add_url_rule("/reservaMateriales/<idcoleccion>", "reservaMateriales_index", reservaMateriales.index)

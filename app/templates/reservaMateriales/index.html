@@ -28,6 +28,7 @@
   <br>
   <a href="{{ url_for('collection_index') }}" class="link">Volver</a>
   
+  {% if reservaMateriales %}
   <a href="{{ url_for('espacioFabricacion_index', idcoleccion = idcoleccion) }}" class="link">Espacios de fabricación</a>
-
+  {% endif %}
 {% endblock %}
