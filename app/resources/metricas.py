@@ -41,7 +41,7 @@ def cantResxMaterial():
 def cantImportColeccion():
     importaciones = Importacion.query.all()
     print(len(importaciones))
-    return render_template("metricas/cantImportaciones.html")
+    return render_template("metricas/cantImportaciones.html",CantI=len(importaciones))
 
 @login_required
 def bonita1():
@@ -54,4 +54,4 @@ def bonita1():
     CantR= len(tareas)
             
     print(CantR)
-    return render_template("metricas/bon1.html")
+    return render_template("metricas/bon1.html",CantR=CantR)
